@@ -122,8 +122,8 @@
 <footer class="py-12 text-center text-[10px] text-gray-600 border-t border-white/5"><p class="uppercase tracking-widest mb-2 font-bold">D.A.N.N.A. — Vanguardia Probabilística 2026</p><p>Bogotá, Colombia. El uso de este motor es estrictamente analítico.</p></footer>
 
 <script>
-    // CONFIG
-    const RAILWAY_URL = "https://danna-engine-production.up.railway.app";
+    // CONFIG — CORREGIDO: Sin dobles comillas
+    const RAILWAY_URL = "https://api.dannaengine.com";
 
     // Scroll animations
     const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
@@ -172,9 +172,7 @@
     
     window.onload = () => { animateCounter('counter-accuracy', 68.1, '%'); };
 
-    // ============================================================
-    // LOGIN — Redirect to Streamlit dashboard
-    // ============================================================
+    // LOGIN
     document.getElementById('login-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const msgEl = document.getElementById('login-msg');
@@ -186,9 +184,7 @@
         }, 800);
     });
 
-    // ============================================================
-    // REGISTER — Calls FastAPI /api/register (creates account in DB)
-    // ============================================================
+    // REGISTER
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const u = document.getElementById('reg-username').value.trim();
@@ -198,27 +194,13 @@
         const msgEl = document.getElementById('reg-msg');
         const btn = document.getElementById('reg-btn');
 
-        // Validations
         if (!legal) {
             msgEl.classList.remove('hidden');
             msgEl.className = 'text-red-500 text-[10px] mt-4 text-center';
             msgEl.textContent = 'Debes aceptar los terminos para continuar.';
             return;
         }
-        if (u.length < 3) {
-            msgEl.classList.remove('hidden');
-            msgEl.className = 'text-red-500 text-[10px] mt-4 text-center';
-            msgEl.textContent = 'Usuario debe tener minimo 3 caracteres.';
-            return;
-        }
-        if (p.length < 6) {
-            msgEl.classList.remove('hidden');
-            msgEl.className = 'text-red-500 text-[10px] mt-4 text-center';
-            msgEl.textContent = 'Contrasena debe tener minimo 6 caracteres.';
-            return;
-        }
 
-        // Show loading
         btn.disabled = true;
         btn.textContent = 'PROCESANDO...';
 
