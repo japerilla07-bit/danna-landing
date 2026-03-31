@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,22 +14,21 @@
     body { background-color: var(--bg-deep); color: var(--text-primary); font-family: 'Montserrat', sans-serif; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
     .gold-text { background: linear-gradient(90deg, #ffd700, #fff7ad, #b8960f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
     .mono { font-family: 'JetBrains Mono', monospace; }
-    .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    
+    /* MODIFICADO: Contenido visible por defecto para evitar que se quede negro */
+    .fade-in { opacity: 1 !important; transform: none !important; }
+    
     .card-blur { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 24px; }
     .tab-btn { background: transparent; border: none; color: #475569; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; padding: 1rem; cursor: pointer; transition: all 0.3s; border-bottom: 2px solid transparent; width: 50%; }
     .tab-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
     .tab-content { display: none; padding-top: 1rem; }
-    .tab-content.active { display: block; animation: slideUp 0.4s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    input[type="text"], input[type="password"], input[type="email"] { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; color: white; width: 100%; margin-bottom: 1rem; outline: none; transition: all 0.3s; }
+    .tab-content.active { display: block; }
+    input[type="text"], input[type="password"], input[type="email"] { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; color: white; width: 100%; margin-bottom: 1rem; outline: none; }
     input:focus { border-color: var(--gold); }
-    button[type="submit"] { cursor: pointer; border-radius: 12px; padding: 1rem; width: 100%; text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em; transition: all 0.3s; }
+    button { cursor: pointer; border-radius: 12px; padding: 1rem; width: 100%; text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em; transition: all 0.3s; }
     #login-form button { background: var(--gold); color: black; border: none; }
-    #login-form button:hover { background: #fff; }
     #register-form button { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
     #register-form button:hover { background: var(--gold); color: black; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -39,20 +39,20 @@
 
 <header class="pt-20 pb-16 px-6 text-center max-w-5xl mx-auto">
     <div class="text-xs uppercase tracking-[0.3em] gold-text mb-2 font-bold">MOTOR DE ANALISIS PROBABILISTICO v1.0</div>
-    <h1 class="text-7xl md:text-[8rem] font-black mb-2 tracking-tighter fade-in gold-text leading-none">D.A.N.N.A</h1>
-    <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter fade-in text-white leading-tight">No es Azar. <br><span class="text-gray-400">Es Ingeniería.</span></h2>
-    <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mb-6 fade-in font-medium">D.A.N.N.A analiza patrones probabilísticos en tiempo real para detectar sectores de alta frecuencia en la ruleta.</p>
-    <div class="fade-in mb-16"><a href="#auth-section" class="inline-block bg-yellow-500 text-black font-black px-12 py-4 rounded-xl uppercase tracking-widest hover:bg-white transition shadow-[0_0_20px_rgba(255,215,0,0.3)]">SOLICITAR ACCESO →</a></div>
+    <h1 class="text-7xl md:text-[8rem] font-black mb-2 tracking-tighter gold-text leading-none">D.A.N.N.A</h1>
+    <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-white leading-tight">No es Azar. <br><span class="text-gray-400">Es Ingeniería.</span></h2>
+    <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mb-10 font-medium">Análisis de patrones en tiempo real para sectores de alta frecuencia.</p>
+    <div class="mb-16"><a href="#auth-section" class="inline-block bg-yellow-500 text-black font-black px-12 py-4 rounded-xl uppercase tracking-widest hover:bg-white transition">SOLICITAR ACCESO →</a></div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto fade-in">
-        <div class="card-blur p-6"><div id="counter-patterns" class="text-3xl font-bold gold-text mono">954</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Patrones (24h)</div></div>
-        <div class="card-blur p-6"><div id="counter-accuracy" class="text-3xl font-bold text-emerald-400 mono">68.1%</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Hit Rate Docenas</div></div>
-        <div class="card-blur p-6"><div class="text-3xl font-bold text-blue-400 mono">8,151</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Spins Analizados</div></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+        <div class="card-blur p-6"><div class="text-3xl font-bold gold-text mono">954</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Patrones</div></div>
+        <div class="card-blur p-6"><div class="text-3xl font-bold text-emerald-400 mono">68.1%</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Hit Rate</div></div>
+        <div class="card-blur p-6"><div class="text-3xl font-bold text-blue-400 mono">8,151</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Spins</div></div>
         <div class="card-blur p-6"><div class="text-3xl font-bold text-purple-400 mono">4</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Modelos ML</div></div>
     </div>
 </header>
 
-<section id="auth-section" class="py-20 px-6 max-w-3xl mx-auto border-t border-white/5 fade-in text-center">
+<section id="auth-section" class="py-20 px-6 max-w-3xl mx-auto text-center">
     <div class="card-blur p-8 md:p-12 text-left max-w-md mx-auto shadow-2xl border-yellow-500/20">
         <div class="flex border-b border-white/10 mb-8">
             <button class="tab-btn active" id="tab-login" onclick="showTab('login')">INGRESAR</button>
@@ -70,15 +70,9 @@
         <div id="content-register" class="tab-content">
             <form id="register-form">
                 <input type="text" id="reg-username" placeholder="NUEVO USUARIO" required>
-                <input type="email" id="reg-email" placeholder="CORREO ELECTRÓNICO" required>
+                <input type="email" id="reg-email" placeholder="CORREO" required>
                 <input type="password" id="reg-password" placeholder="CONTRASEÑA" required>
-                <div class="flex items-start gap-3 mb-6 p-4 bg-red-900/10 rounded-lg border border-red-500/30">
-                    <input type="checkbox" id="reg-legal" required class="mt-1">
-                    <label for="reg-legal" class="text-[10px] text-gray-300 leading-tight">
-                        Confirmó que soy mayor de edad y asumo el riesgo.
-                    </label>
-                </div>
-                <button type="submit" id="reg-btn">CREAR CUENTA →</button>
+                <button type="submit" id="reg-btn">CREAR CUENTA</button>
                 <p id="reg-msg" class="text-[10px] mt-4 text-center hidden"></p>
             </form>
         </div>
@@ -86,10 +80,8 @@
 </section>
 
 <script>
-    // CONFIG FINAL
     const RAILWAY_URL = "https://api.dannaengine.com";
 
-    // Tabs logic
     function showTab(type) { 
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
@@ -97,15 +89,10 @@
         document.getElementById('content-' + type).classList.add('active');
     }
 
-    // Register logic
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const u = document.getElementById('reg-username').value.trim();
-        const em = document.getElementById('reg-email').value.trim();
-        const p = document.getElementById('reg-password').value;
-        const msgEl = document.getElementById('reg-msg');
         const btn = document.getElementById('reg-btn');
-
+        const msgEl = document.getElementById('reg-msg');
         btn.disabled = true;
         btn.textContent = 'PROCESANDO...';
 
@@ -113,7 +100,11 @@
             const res = await fetch(`${RAILWAY_URL}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, password: p, email: em })
+                body: JSON.stringify({ 
+                    username: document.getElementById('reg-username').value, 
+                    password: document.getElementById('reg-password').value,
+                    email: document.getElementById('reg-email').value 
+                })
             });
             const data = await res.json();
             msgEl.classList.remove('hidden');
@@ -121,10 +112,11 @@
             msgEl.textContent = data.message;
         } catch (err) {
             msgEl.classList.remove('hidden');
-            msgEl.textContent = 'Error de conexión con el motor.';
+            msgEl.className = 'text-red-500 text-center mt-4';
+            msgEl.textContent = 'Error de conexión.';
         }
         btn.disabled = false;
-        btn.textContent = 'CREAR CUENTA →';
+        btn.textContent = 'CREAR CUENTA';
     });
 </script>
 </body>
