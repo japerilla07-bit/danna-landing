@@ -3,126 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D.A.N.N.A. — Motor de Analisis Probabilistico</title>
+<title>D.A.N.N.A. — Motor de Análisis Probabilístico</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg-deep:#05070a;--bg-card:#0f172a;--neon:#00ff88;--gold:#ffd700;--gold-dim:#b8960f;--red-alert:#ff3b3b;--text-primary:#f8fafc;--text-secondary:#94a3b8;--border:rgba(255,255,255,0.08)}
-body{background-color:var(--bg-deep);color:var(--text-primary);font-family:'Montserrat',sans-serif;line-height:1.6;overflow-x:hidden;scroll-behavior:smooth}
-.gold-text{background:linear-gradient(90deg,#ffd700,#fff7ad,#b8960f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
-.mono{font-family:'JetBrains Mono',monospace}
-.fade-in{opacity:0;transform:translateY(20px);transition:all .8s cubic-bezier(.22,1,.36,1)}
-.fade-in.visible{opacity:1;transform:translateY(0)}
-.card-blur{background:rgba(15,23,42,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:24px}
-.tab-btn{background:transparent;border:none;color:#475569;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.15em;padding:1rem;cursor:pointer;transition:all .3s;border-bottom:2px solid transparent;width:50%}
-.tab-btn.active{color:var(--gold);border-bottom:2px solid var(--gold)}
-.tab-content{display:none;padding-top:1rem}
-.tab-content.active{display:block;animation:slideUp .4s ease-out}
-@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-input[type="text"],input[type="password"],input[type="email"]{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;padding:1rem;color:white;width:100%;margin-bottom:1rem;outline:none;transition:all .3s;font-family:'Montserrat',sans-serif}
-input:focus{border-color:var(--gold)}
-button[type="submit"]{cursor:pointer;border-radius:12px;padding:1rem;width:100%;text-transform:uppercase;font-weight:900;letter-spacing:.1em;transition:all .3s;font-family:'Montserrat',sans-serif;font-size:.85rem}
-#login-form button{background:var(--gold);color:black;border:none}
-#login-form button:hover{background:#fff}
-#register-form button{background:transparent;border:2px solid var(--gold);color:var(--gold)}
-#register-form button:hover{background:var(--gold);color:black}
-button:disabled{opacity:.5;cursor:not-allowed}
-.msg-box{font-size:12px;margin-top:15px;text-align:center;padding:10px;border-radius:8px;display:none}
-.msg-success{display:block;color:var(--neon);background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2)}
-.msg-error{display:block;color:var(--red-alert);background:rgba(255,59,59,.08);border:1px solid rgba(255,59,59,.2)}
-.msg-pending{display:block;color:var(--gold);background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2)}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:black;border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --bg-deep: #05070a; --bg-card: #0f172a; --neon: #00ff88; --gold: #ffd700; --gold-dim: #b8960f; --text-primary: #f8fafc; --border: rgba(255,255,255,0.08); }
+    body { background-color: var(--bg-deep); color: var(--text-primary); font-family: 'Montserrat', sans-serif; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+    .gold-text { background: linear-gradient(90deg, #ffd700, #fff7ad, #b8960f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .card-blur { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 24px; }
+    .tab-btn { background: transparent; border: none; color: #475569; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; padding: 1rem; cursor: pointer; transition: all 0.3s; border-bottom: 2px solid transparent; width: 50%; }
+    .tab-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+    .tab-content { display: none; padding-top: 1rem; }
+    .tab-content.active { display: block; animation: slideUp 0.4s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    input[type="text"], input[type="password"], input[type="email"] { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; color: white; width: 100%; margin-bottom: 1rem; outline: none; transition: all 0.3s; }
+    input:focus { border-color: var(--gold); }
+    button[type="submit"] { cursor: pointer; border-radius: 12px; padding: 1rem; width: 100%; text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em; transition: all 0.3s; }
+    #login-form button { background: var(--gold); color: black; border: none; }
+    #login-form button:hover { background: #fff; }
+    #register-form button { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+    #register-form button:hover { background: var(--gold); color: black; }
 </style>
 </head>
 <body>
-<div class="bg-red-600/10 border-b border-red-500/20 py-2 text-center text-[10px] md:text-xs font-bold tracking-widest text-red-500 uppercase">&#9888; ALERTA: Solo quedan <span id="fomo-counter" class="text-white">14</span> licencias Beta disponibles para este ciclo de analisis.</div>
+
+<div class="bg-red-600/10 border-b border-red-500/20 py-2 text-center text-[10px] md:text-xs font-bold tracking-widest text-red-500 uppercase">
+    ⚠️ ALERTA: Solo quedan <span id="fomo-counter">14</span> licencias Beta disponibles.
+</div>
+
 <header class="pt-20 pb-16 px-6 text-center max-w-5xl mx-auto">
-<div class="text-xs uppercase tracking-[0.3em] gold-text mb-2 font-bold">MOTOR DE ANALISIS PROBABILISTICO v1.0</div>
-<h1 class="text-7xl md:text-[8rem] font-black mb-2 tracking-tighter fade-in leading-none gold-text drop-shadow-2xl">D.A.N.N.A</h1>
-<h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter fade-in leading-tight text-white">No es Azar.<br><span class="text-gray-400">Es Ingenieria.</span></h2>
-<p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mb-6 fade-in font-medium">D.A.N.N.A analiza patrones probabilisticos en tiempo real para detectar sectores de alta frecuencia en la ruleta. Optimiza tu bankroll con datos, no con corazonadas.</p>
-<p class="text-gray-500 text-sm max-w-3xl mx-auto mb-10 fade-in">El motor de analisis que la casa no quiere que uses. 4 modelos de Machine Learning. 6 capas de proteccion. Analisis en tiempo real. Gestion de riesgo automatizada. Validado sobre 8,151 spins reales.</p>
-<div class="fade-in mb-16"><a href="#auth-section" class="inline-block bg-yellow-500 text-black font-black px-12 py-4 rounded-xl uppercase tracking-widest hover:bg-white hover:text-black transition transform hover:-translate-y-1 shadow-[0_0_20px_rgba(255,215,0,0.3)]">SOLICITAR ACCESO &rarr;</a></div>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto fade-in">
-<div class="card-blur p-6"><div id="counter-patterns" class="text-3xl font-bold gold-text mono">954</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Patrones Detectados (24h)</div></div>
-<div class="card-blur p-6"><div id="counter-accuracy" class="text-3xl font-bold text-emerald-400 mono">68.1%</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Hit Rate Docenas</div></div>
-<div class="card-blur p-6"><div class="text-3xl font-bold text-blue-400 mono">8,151</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Spins Analizados</div></div>
-<div class="card-blur p-6"><div class="text-3xl font-bold text-purple-400 mono">4</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Modelos ML Activos</div></div>
-</div>
+    <div class="text-xs uppercase tracking-[0.3em] gold-text mb-2 font-bold">MOTOR DE ANALISIS PROBABILISTICO v1.0</div>
+    <h1 class="text-7xl md:text-[8rem] font-black mb-2 tracking-tighter fade-in gold-text leading-none">D.A.N.N.A</h1>
+    <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter fade-in text-white leading-tight">No es Azar. <br><span class="text-gray-400">Es Ingeniería.</span></h2>
+    <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mb-6 fade-in font-medium">D.A.N.N.A analiza patrones probabilísticos en tiempo real para detectar sectores de alta frecuencia en la ruleta. Optimiza tu bankroll con datos, no con corazonadas.</p>
+    <p class="text-gray-500 text-sm max-w-3xl mx-auto mb-10 fade-in">4 modelos de Machine Learning. 6 capas de protección. Análisis en tiempo real. Gestión de riesgo automatizada. Validado sobre 8,151 spins reales.</p>
+    <div class="fade-in mb-16"><a href="#auth-section" class="inline-block bg-yellow-500 text-black font-black px-12 py-4 rounded-xl uppercase tracking-widest hover:bg-white transition shadow-[0_0_20px_rgba(255,215,0,0.3)]">SOLICITAR ACCESO →</a></div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto fade-in">
+        <div class="card-blur p-6"><div id="counter-patterns" class="text-3xl font-bold gold-text mono">954</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Patrones (24h)</div></div>
+        <div class="card-blur p-6"><div id="counter-accuracy" class="text-3xl font-bold text-emerald-400 mono">68.1%</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Hit Rate Docenas</div></div>
+        <div class="card-blur p-6"><div class="text-3xl font-bold text-blue-400 mono">8,151</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Spins Analizados</div></div>
+        <div class="card-blur p-6"><div class="text-3xl font-bold text-purple-400 mono">4</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Modelos ML</div></div>
+    </div>
 </header>
+
 <section class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5 fade-in">
-<div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Como Funciona</h2><p class="text-gray-400">3 pasos. Sin complicaciones. Sin curva de aprendizaje.</p></div>
-<div class="grid md:grid-cols-3 gap-8">
-<div class="card-blur p-8"><div class="text-4xl mb-4">01 &#128274;</div><h3 class="text-xl font-bold mb-2 gold-text">Conecta</h3><p class="text-sm text-gray-400">Accede desde cualquier dispositivo. Sin descargas. Sin instalacion. Solo tu navegador y tu sesion en el casino.</p></div>
-<div class="card-blur p-8"><div class="text-4xl mb-4">02 &#9889;</div><h3 class="text-xl font-bold mb-2 gold-text">Analiza</h3><p class="text-sm text-gray-400">Ingresa los numeros de la mesa en tiempo real. D.A.N.N.A. procesa con 4 modelos de ML y 6 capas de proteccion simultaneamente.</p></div>
-<div class="card-blur p-8"><div class="text-4xl mb-4">03 &#127919;</div><h3 class="text-xl font-bold mb-2 gold-text">Ejecuta</h3><p class="text-sm text-gray-400">Recibe senales BET con nivel de confianza, tipo de apuesta y sizing optimo (Kelly). Tu decides. El motor informa.</p></div>
-</div>
+    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Cómo Funciona</h2><p class="text-gray-400">3 pasos. Sin complicaciones. Sin curva de aprendizaje.</p></div>
+    <div class="grid md:grid-cols-3 gap-8">
+        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">01 🔒</div><h3 class="text-xl font-bold mb-2 gold-text">Conecta</h3><p class="text-sm text-gray-400">Accede desde cualquier dispositivo. Sin descargas. Sin instalación. Solo tu navegador y tu sesión en el casino.</p></div>
+        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">02 ⚡</div><h3 class="text-xl font-bold mb-2 gold-text">Analiza</h3><p class="text-sm text-gray-400">Ingresa los números en tiempo real. D.A.N.N.A. procesa con 4 modelos de ML y 6 capas de protección simultáneamente.</p></div>
+        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">03 🎯</div><h3 class="text-xl font-bold mb-2 gold-text">Ejecuta</h3><p class="text-sm text-gray-400">Recibe señales con nivel de confianza, tipo de apuesta y sizing óptimo (Kelly). Tú decides. El motor informa.</p></div>
+    </div>
 </section>
+
 <section class="py-20 px-6 max-w-5xl mx-auto border-t border-white/5 fade-in">
-<div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Resultados del Backtest</h2><p class="text-gray-400">Validado con datos reales. Sin simulaciones ficticias.</p></div>
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-<div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-white">8,151</div><div class="text-xs text-gray-500 uppercase mt-1">Spins Testeados</div></div>
-<div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-emerald-400">+838u</div><div class="text-xs text-gray-500 uppercase mt-1">PnL Combinado</div></div>
-<div class="card-blur p-6 text-center"><div class="text-2xl font-black mono gold-text">68.14%</div><div class="text-xs text-gray-500 uppercase mt-1">Hit Rate Docenas</div></div>
-<div class="card-blur p-6 text-center"><div class="text-2xl font-black mono gold-text">34.90%</div><div class="text-xs text-gray-500 uppercase mt-1">Hit Rate Guardian</div></div>
-<div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-emerald-400">+372u</div><div class="text-xs text-gray-500 uppercase mt-1">PnL Guardian (Mejor)</div></div>
-<div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-blue-400">3.81</div><div class="text-xs text-gray-500 uppercase mt-1">Profit Factor</div></div>
-</div>
+    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Resultados del Backtest</h2><p class="text-gray-400">Validado con datos reales. Sin simulaciones ficticias.</p></div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono">8,151</div><div class="text-xs text-gray-500 uppercase mt-1">Spins Testeados</div></div>
+        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-emerald-400">+838u</div><div class="text-xs text-gray-500 uppercase mt-1">PnL Combinado</div></div>
+        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono gold-text">68.14%</div><div class="text-xs text-gray-500 uppercase mt-1">Hit Rate Docenas</div></div>
+        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono gold-text">34.90%</div><div class="text-xs text-gray-500 uppercase mt-1">Hit Rate Guardian</div></div>
+        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-emerald-400">+372u</div><div class="text-xs text-gray-500 uppercase mt-1">PnL Guardian</div></div>
+        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-blue-400">3.81</div><div class="text-xs text-gray-500 uppercase mt-1">Profit Factor</div></div>
+    </div>
 </section>
-<section class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5 fade-in">
-<div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Planes</h2><p class="text-gray-400">Sin contratos. Sin permanencia. Paga solo cuando juegas.</p></div>
-<div class="grid md:grid-cols-4 gap-6">
-<div class="card-blur p-8 flex flex-col"><h3 class="text-lg font-bold text-gray-300">Trial</h3><div class="text-4xl font-black my-4">$0</div><div class="text-xs text-gray-500 uppercase mb-6 font-bold">Un solo uso</div><ul class="text-sm text-gray-400 space-y-3 mb-8 flex-grow"><li>&#8226; 30 Spins totales</li><li>&#8226; Motor completo</li><li>&#8226; Sin compromiso</li><li>&#8226; Prueba antes de pagar</li></ul><a href="#auth-section" class="w-full text-center py-3 border border-white/20 rounded-xl text-xs font-bold uppercase hover:bg-white/10 transition block">PROBAR GRATIS</a></div>
-<div class="card-blur p-8 flex flex-col"><h3 class="text-lg font-bold text-gray-300">Daily Pass</h3><div class="text-4xl font-black my-4">$10</div><div class="text-xs text-gray-500 uppercase mb-6 font-bold">por 24 horas</div><ul class="text-sm text-gray-400 space-y-3 mb-8 flex-grow"><li>&#8226; Spins ilimitados</li><li>&#8226; Motor completo</li><li>&#8226; Ideal para un dia de juego</li><li>&#8226; Activo al instante</li></ul><a href="#auth-section" class="w-full text-center py-3 border border-white/20 rounded-xl text-xs font-bold uppercase hover:bg-white/10 transition block">SOLICITAR ACCESO</a></div>
-<div class="card-blur p-8 flex flex-col border-yellow-500/40 relative transform md:-translate-y-4 shadow-2xl bg-yellow-900/10"><div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">MAS POPULAR</div><h3 class="text-lg font-bold gold-text">Weekly Pro</h3><div class="text-4xl font-black my-4">$25</div><div class="text-xs text-yellow-500/50 uppercase mb-6 font-bold">por 7 dias</div><ul class="text-sm text-gray-300 space-y-3 mb-8 flex-grow"><li>&#8226; Spins ilimitados</li><li>&#8226; Motor completo</li><li>&#8226; Actualizaciones de algoritmo</li><li>&#8226; Soporte prioritario</li></ul><a href="#auth-section" class="w-full text-center py-3 bg-yellow-500 text-black rounded-xl text-xs font-black uppercase hover:bg-white transition block">EMPEZAR AHORA</a></div>
-<div class="card-blur p-8 flex flex-col"><h3 class="text-lg font-bold text-gray-300">Lifetime Beta</h3><div class="text-4xl font-black my-4">$200</div><div class="text-xs text-gray-500 uppercase mb-6 font-bold text-center leading-tight">pago unico — para siempre</div><ul class="text-sm text-gray-400 space-y-3 mb-8 flex-grow"><li>&#8226; Acceso de por vida</li><li>&#8226; Spins ilimitados</li><li>&#8226; Todas las actualizaciones</li><li>&#8226; Solo 20 licencias</li></ul><a href="#auth-section" class="w-full text-center py-3 border border-white/20 rounded-xl text-xs font-bold uppercase hover:bg-white/10 transition block">RECLAMAR LICENCIA</a></div>
-</div>
+
+<section id="planes" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5 fade-in">
+    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Planes</h2><p class="text-gray-400">Sin contratos. Sin permanencia. Paga solo cuando juegas.</p></div>
+    <div class="grid md:grid-cols-4 gap-6">
+        <div class="card-blur p-8 flex flex-col"><h3 class="font-bold">Trial</h3><div class="text-4xl font-black my-4">$0</div><p class="text-xs text-gray-500 mb-6">250 Spins totales / Un solo uso</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Motor completo</li><li>• Sin compromiso</li><li>• Prueba antes de pagar</li></ul><a href="#auth-section" class="w-full text-center py-3 border border-white/20 rounded-xl text-[10px] font-bold uppercase hover:bg-white/10 transition">PROBAR GRATIS</a></div>
+        <div class="card-blur p-8 flex flex-col"><h3 class="font-bold">Daily Pass</h3><div class="text-4xl font-black my-4">$10</div><p class="text-xs text-gray-500 mb-6">Acceso por 24 horas</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Spins ilimitados</li><li>• Motor completo</li><li>• Activo al instante</li></ul><a href="#auth-section" class="w-full text-center py-3 border border-white/20 rounded-xl text-[10px] font-bold uppercase hover:bg-white/10 transition">SOLICITAR ACCESO</a></div>
+        <div class="card-blur p-8 flex flex-col border-yellow-500/50 relative transform md:-translate-y-4 bg-yellow-900/10"><div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[9px] font-black px-3 py-1 rounded-full uppercase">MAS POPULAR</div><h3 class="font-bold gold-text">Weekly Pro</h3><div class="text-4xl font-black my-4">$25</div><p class="text-xs text-yellow-500/50 mb-6 font-bold">Acceso por 7 dias</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Soporte prioritario</li><li>• Spins ilimitados</li><li>• Actualizaciones de algoritmo</li></ul><a href="#auth-section" class="w-full text-center py-3 bg-yellow-500 text-black rounded-xl text-[10px] font-black uppercase hover:bg-white transition">EMPEZAR AHORA</a></div>
+        <div class="card-blur p-8 flex flex-col"><h3 class="font-bold">Monthly Elite</h3><div class="text-4xl font-black my-4">$75</div><p class="text-xs text-gray-500 mb-6 text-center leading-tight">Pago mensual — cancela cuando quieras</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Acceso total 30 días</li><li>• Spins ilimitados</li><li>• Todas las actualizaciones</li><li>• Soporte dedicado</li></ul><a href="#auth-section" class="w-full text-center py-3 border border-white/20 rounded-xl text-[10px] font-bold uppercase hover:bg-white/10 transition">SUSCRIBIRSE</a></div>
+    </div>
 </section>
+
 <section id="auth-section" class="py-20 px-6 max-w-3xl mx-auto border-t border-white/5 fade-in text-center">
-<h2 class="text-4xl font-black mb-4">La mesa esta abierta.</h2>
-<p class="text-gray-400 mb-10">Mientras lees esto, alguien ya esta operando con D.A.N.N.A.</p>
-<div class="card-blur p-8 md:p-12 text-left shadow-2xl border-yellow-500/20 max-w-md mx-auto">
-<div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:30px">
-<button class="tab-btn active" id="tab-login" onclick="showTab('login')">INGRESAR</button>
-<button class="tab-btn" id="tab-register" onclick="showTab('register')">REGISTRO</button>
-</div>
-<div id="content-login" class="tab-content active">
-<form id="login-form">
-<input type="text" id="login-username" placeholder="NOMBRE DE USUARIO" required>
-<input type="password" id="login-password" placeholder="CONTRASENA" required>
-<button type="submit" id="login-btn">Desplegar Interfaz</button>
-<div id="login-msg" class="msg-box"></div>
-</form>
-</div>
-<div id="content-register" class="tab-content">
-<form id="register-form">
-<input type="text" id="reg-username" placeholder="NUEVO USUARIO" required minlength="3">
-<input type="email" id="reg-email" placeholder="EMAIL O WHATSAPP" required>
-<input type="password" id="reg-password" placeholder="ASIGNAR CONTRASENA" required minlength="6">
-<input type="password" id="reg-password2" placeholder="CONFIRMAR CONTRASENA" required>
-<button type="submit" id="reg-btn">CREAR CUENTA &rarr;</button>
-<div id="reg-msg" class="msg-box"></div>
-</form>
-</div>
-</div>
+    <h2 class="text-4xl font-black mb-4">La mesa esta abierta.</h2>
+    <p class="text-gray-400 mb-10">Mientras lees esto, alguien ya esta operando con D.A.N.N.A.</p>
+    <div class="card-blur p-8 md:p-12 text-left max-w-md mx-auto shadow-2xl border-yellow-500/20">
+        <div class="flex border-b border-white/10 mb-8"><button class="tab-btn active" id="tab-login" onclick="showTab('login')">INGRESAR</button><button class="tab-btn" id="tab-register" onclick="showTab('register')">REGISTRO</button></div>
+        
+        <div id="content-login" class="tab-content active">
+            <form id="login-form">
+                <input type="text" id="login-username" placeholder="NOMBRE DE USUARIO" required>
+                <input type="password" id="login-password" placeholder="CONTRASEÑA" required>
+                <button type="submit">Desplegar Interfaz</button>
+                <p id="login-error" class="text-red-500 text-[10px] mt-4 text-center hidden"></p>
+            </form>
+        </div>
+        
+        <div id="content-register" class="tab-content">
+            <form id="register-form">
+                <input type="text" id="reg-username" placeholder="NUEVO USUARIO" required>
+                <input type="email" id="reg-email" placeholder="CORREO ELECTRÓNICO" required>
+                <input type="password" id="reg-password" placeholder="CONTRASEÑA" required>
+                
+                <div class="flex items-start gap-3 mb-6 p-4 bg-red-900/10 rounded-lg border border-red-500/30">
+                    <input type="checkbox" id="reg-legal" required class="mt-1 accent-yellow-500" style="min-width: 16px; min-height: 16px;">
+                    <label for="reg-legal" class="text-[10px] text-gray-300 leading-tight">
+                        <b>Soy mayor de edad (18+).</b> Confirmo que D.A.N.N.A es una herramienta de <b>análisis probabilístico</b> y asumo el 100% del riesgo. Entiendo que mis <b>250 Spins de prueba</b> no garantizan ganancias financieras.
+                    </label>
+                </div>
+                
+                <button type="submit">CREAR CUENTA →</button>
+                <p id="reg-success" class="text-emerald-500 text-[10px] mt-4 text-center hidden"></p>
+            </form>
+        </div>
+    </div>
 </section>
-<footer class="text-center py-10 border-t border-white/5">
-<p class="text-gray-600 text-xs">D.A.N.N.A. &copy; 2026 — Motor de Analisis Probabilistico</p>
-<p class="text-gray-700 text-[10px] mt-2">D.A.N.N.A. es una herramienta de analisis estadistico y gestion de riesgo. No garantiza ganancias. Usa bajo tu propio criterio.</p>
-</footer>
+
+<footer class="py-12 text-center text-[10px] text-gray-600 border-t border-white/5"><p class="uppercase tracking-widest mb-2 font-bold">D.A.N.N.A. — Vanguardia Probabilística 2026</p><p>Bogotá, Colombia. El uso de este motor es estrictamente analítico.</p></footer>
+
 <script>
-const API_BASE="https://danna-engine-production.up.railway.app";
-const DASHBOARD_URL="https://danna-engine-production.up.railway.app";
-function showTab(t){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-'+t).classList.add('active');document.getElementById('content-'+t).classList.add('active');document.querySelectorAll('.msg-box').forEach(m=>{m.className='msg-box';m.style.display='none'})}
-document.getElementById('register-form').addEventListener('submit',async e=>{e.preventDefault();const u=document.getElementById('reg-username').value.trim(),em=document.getElementById('reg-email').value.trim(),p=document.getElementById('reg-password').value,p2=document.getElementById('reg-password2').value,msg=document.getElementById('reg-msg'),btn=document.getElementById('reg-btn');if(p!==p2){msg.className='msg-box msg-error';msg.textContent='Las contrasenas no coinciden.';return}if(u.length<3){msg.className='msg-box msg-error';msg.textContent='Usuario debe tener minimo 3 caracteres.';return}if(p.length<6){msg.className='msg-box msg-error';msg.textContent='Contrasena debe tener minimo 6 caracteres.';return}btn.disabled=true;btn.innerHTML='<span class="spinner"></span>PROCESANDO...';try{const r=await fetch(API_BASE+'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p,email:em})});const d=await r.json();if(d.success){msg.className='msg-box msg-pending';msg.innerHTML='&#9203; '+d.message;document.getElementById('register-form').reset()}else{msg.className='msg-box msg-error';msg.textContent=d.message}}catch(err){msg.className='msg-box msg-error';msg.textContent='Error de conexion. Verifica tu internet e intenta de nuevo.'}btn.disabled=false;btn.innerHTML='CREAR CUENTA &rarr;'});
-document.getElementById('login-form').addEventListener('submit',e=>{e.preventDefault();const msg=document.getElementById('login-msg');msg.className='msg-box msg-pending';msg.innerHTML='&#9203; Redirigiendo al dashboard...';setTimeout(()=>{window.open(DASHBOARD_URL,'_blank')},500)});
-const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
-setInterval(()=>{const el=document.getElementById('counter-patterns');if(el){let v=parseInt(el.textContent.replace(/,/g,''))||954;v+=Math.floor(Math.random()*3)+1;el.textContent=v.toLocaleString()}},5000);
-const fomoEl=document.getElementById('fomo-counter');if(fomoEl)setInterval(()=>{let v=parseInt(fomoEl.textContent);if(v>3&&Math.random()>.8)fomoEl.textContent=(v-1).toString()},15000);
-window.onload=()=>{const el=document.getElementById('counter-accuracy');if(el){let c=0;const t=setInterval(()=>{c+=68.1/60;if(c>=68.1){c=68.1;clearInterval(t)}el.textContent=c.toFixed(1)+'%'},30)}};
+    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    
+    function showTab(type) { 
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+        document.getElementById('tab-' + type).classList.add('active'); 
+        document.getElementById('content-' + type).classList.add('active'); 
+    }
+    
+    function animateCounter(id, target, suffix) { 
+        const el = document.getElementById(id); 
+        if (!el) return; 
+        let current = 0; 
+        const step = target / 60; 
+        const timer = setInterval(() => { 
+            current += step; 
+            if (current >= target) { 
+                current = target; 
+                clearInterval(timer); 
+            } 
+            el.textContent = (Number.isInteger(target) ? Math.floor(current).toLocaleString() : current.toFixed(1)) + (suffix || ''); 
+        }, 30); 
+    }
+    
+    setInterval(() => { 
+        const el = document.getElementById('counter-patterns'); 
+        if (el) { 
+            let v = parseInt(el.textContent.replace(/,/g, '')) || 954; 
+            v += Math.floor(Math.random() * 3) + 1; 
+            el.textContent = v.toLocaleString(); 
+        } 
+    }, 5000);
+    
+    const fomoEl = document.getElementById('fomo-counter'); 
+    if (fomoEl) { 
+        setInterval(() => { 
+            let v = parseInt(fomoEl.textContent); 
+            if (v > 3 && Math.random() > 0.8) fomoEl.textContent = (v - 1).toString(); 
+        }, 15000); 
+    }
+    
+    window.onload = () => { animateCounter('counter-accuracy', 68.1, '%'); };
+
+    // API CONNECTOR
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const successEl = document.getElementById('reg-success');
+        successEl.classList.remove('hidden');
+        successEl.innerText = "Registrando solicitud en D.A.N.N.A...";
+    });
 </script>
 </body>
 </html>
