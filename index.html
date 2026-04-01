@@ -166,12 +166,12 @@
     window.onload = () => { animateCounter('counter-accuracy', 68.1, '%'); };
 
     // --- PUENTE DE CONEXIÓN A RAILWAY CORREGIDO ---
-    const RAILWAY_URL = "https://api.dannaengine.com";
+    const RAILWAY_URL = "https://danna-engine-production.up.railway.app";
 
     // Redirección Login
     document.getElementById('login-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        window.location.href = RAILWAY_URL;
+        window.location.href = "https://app.dannaengine.com";
     });
 
     // Registro con conexión real al servidor
