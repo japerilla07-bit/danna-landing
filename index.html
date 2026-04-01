@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D.A.N.N.A. — Motor de Análisis Probabilístico</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
-<style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg-deep: #05070a; --bg-card: #0f172a; --neon: #00ff88; --gold: #ffd700; --gold-dim: #b8960f; --text-primary: #f8fafc; --border: rgba(255,255,255,0.08); }
-    body { background-color: var(--bg-deep); color: var(--text-primary); font-family: 'Montserrat', sans-serif; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
-    .gold-text { background: linear-gradient(90deg, #ffd700, #fff7ad, #b8960f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
-    
-    /* FIX DE VISIBILIDAD CRÍTICO */
-    .fade-in { opacity: 1 !important; transform: none !important; }
-    
-    .card-blur { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 24px; }
-    .tab-btn { background: transparent; border: none; color: #475569; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; padding: 1rem; cursor: pointer; transition: all 0.3s; border-bottom: 2px solid transparent; width: 50%; }
-    .tab-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
-    .tab-content { display: none; padding-top: 1rem; }
-    .tab-content.active { display: block; animation: slideUp 0.4s ease-out; }
-    
-    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    
-    input { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; color: white; width: 100%; margin-bottom: 1rem; outline: none; }
-    input:focus { border-color: var(--gold); }
-    button[type="submit"] { cursor: pointer; border-radius: 12px; padding: 1rem; width: 100%; text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em; transition: all 0.3s; }
-    #login-form button { background: var(--gold); color: black; border: none; }
-    #register-form button { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
-    #register-form button:hover { background: var(--gold); color: black; }
-    
-    .plan-card { border: 1px solid var(--border); transition: all 0.3s; position: relative; overflow: hidden; }
-    .plan-card:hover { border-color: var(--gold); transform: translateY(-5px); background: rgba(255, 215, 0, 0.03); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.A.N.N.A. — Motor de Análisis Probabilístico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg-deep: #05070a; --bg-card: #0f172a; --neon: #00ff88; --gold: #ffd700; --gold-dim: #b8960f; --text-primary: #f8fafc; --border: rgba(255,255,255,0.08); }
+        body { background-color: var(--bg-deep); color: var(--text-primary); font-family: 'Montserrat', sans-serif; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
+        .gold-text { background: linear-gradient(90deg, #ffd700, #fff7ad, #b8960f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* FIX DE VISIBILIDAD: NADA SE OCULTA */
+        .fade-in { opacity: 1 !important; transform: none !important; }
+        
+        .card-blur { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 24px; }
+        .tab-btn { background: transparent; border: none; color: #475569; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; padding: 1rem; cursor: pointer; transition: all 0.3s; border-bottom: 2px solid transparent; width: 50%; }
+        .tab-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
+        .tab-content { display: none; padding-top: 1rem; }
+        .tab-content.active { display: block; }
+        
+        input { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; color: white; width: 100%; margin-bottom: 1rem; outline: none; }
+        input:focus { border-color: var(--gold); }
+        button[type="submit"] { cursor: pointer; border-radius: 12px; padding: 1rem; width: 100%; text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em; transition: all 0.3s; }
+        
+        #login-form button { background: var(--gold); color: black; }
+        #register-form button { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+        #register-form button:hover { background: var(--gold); color: black; }
+        
+        .plan-card { border: 1px solid var(--border); transition: all 0.3s; height: 100%; }
+        .plan-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+    </style>
 </head>
 <body>
 
 <div class="bg-red-600/10 border-b border-red-500/20 py-2 text-center text-[10px] md:text-xs font-bold tracking-widest text-red-500 uppercase">
-    ⚠️ ALERTA: Solo quedan 14 licencias Beta disponibles para el ciclo actual.
+    ⚠️ ALERTA: Solo quedan 14 licencias Beta disponibles.
 </div>
 
 <header class="pt-20 pb-16 px-6 text-center max-w-5xl mx-auto">
@@ -47,75 +46,84 @@
     <h1 class="text-7xl md:text-[8rem] font-black mb-2 tracking-tighter gold-text leading-none">D.A.N.N.A</h1>
     <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-white leading-tight">No es Azar. <br><span class="text-gray-400">Es Ingeniería.</span></h2>
     
-    <div class="max-w-3xl mx-auto space-y-6 mb-12">
-        <p class="text-gray-300 text-lg md:text-xl font-medium">
+    <div class="max-w-3xl mx-auto mb-12">
+        <p class="text-gray-200 text-lg md:text-xl font-bold mb-4">
             D.A.N.N.A Analiza patrones probabolisticos en tiempo real para detectar sectores de alta frecuencia en la ruleta. Optimiza tu bankroll con datos, no con corazonadas.
         </p>
-        <p class="text-gray-400 text-md italic border-l-2 border-yellow-500 pl-4 py-2">
-            El motor de analisis que la casa no quiere que uses. 4 modelos de machine learning. 6 capas de protección, analisis en tiempo real. Gestion de riesgo automatizada. Validado sobre 8151 spins reales.
+        <p class="text-yellow-500/80 text-md font-semibold italic">
+            El motor de analisis que la casa no quiere que uses, 4 modelos me machine learning. 6 capas de prtoteccion, analisis en tiempo real . Gestion de riesgo automatizada . Validado sobre 8151 spins reales.
         </p>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto mb-16">
         <div class="card-blur p-6"><div class="text-3xl font-bold gold-text mono">954</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Patrones (24h)</div></div>
         <div class="card-blur p-6"><div class="text-3xl font-bold text-emerald-400 mono">68.1%</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Hit Rate Docenas</div></div>
-        <div class="card-blur p-6"><div class="text-3xl font-bold text-blue-400 mono">8,151</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Spins Analizados</div></div>
+        <div class="card-blur p-6"><div class="text-3xl font-bold text-blue-400 mono">8,151</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Spins Reales</div></div>
         <div class="card-blur p-6"><div class="text-3xl font-bold text-purple-400 mono">4</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Modelos ML</div></div>
     </div>
 </header>
 
-<section class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
-    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Cómo Funciona</h2><p class="text-gray-400">Ventaja estadística mediante procesamiento masivo de datos.</p></div>
-    <div class="grid md:grid-cols-3 gap-8">
-        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">01 🔒</div><h3 class="text-xl font-bold mb-2 gold-text">Conecta</h3><p class="text-sm text-gray-400">Acceso desde cualquier dispositivo. El motor vive en la nube, procesando miles de variables mientras tú juegas.</p></div>
-        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">02 ⚡</div><h3 class="text-xl font-bold mb-2 gold-text">Analiza</h3><p class="text-sm text-gray-400">Ingreso de datos instantáneo. 4 modelos de ML comparan el spin actual contra 8,151 registros históricos en milisegundos.</p></div>
-        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">03 🎯</div><h3 class="text-xl font-bold mb-2 gold-text">Ejecuta</h3><p class="text-sm text-gray-400">Recibe señales precisas con gestión de riesgo Kelly automatizada. Protegemos tu capital ante rachas negativas.</p></div>
+<section class="py-16 px-6 max-w-6xl mx-auto border-t border-white/5">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+            <h2 class="text-3xl font-black mb-6 gold-text uppercase">Resultados del Backtest</h2>
+            <p class="text-gray-400 mb-6">Sometimos a D.A.N.N.A a una prueba de estrés masiva utilizando datos de casinos reales. No son simulaciones, son 8,151 spins procesados bajo condiciones de juego real.</p>
+            <ul class="space-y-4">
+                <li class="flex items-center gap-3 text-sm"><span class="text-emerald-400">✔</span> Reducción del Drawdown en un 42%</li>
+                <li class="flex items-center gap-3 text-sm"><span class="text-emerald-400">✔</span> Identificación de "Zonas Calientes" en 12 spins</li>
+                <li class="flex items-center gap-3 text-sm"><span class="text-emerald-400">✔</span> Tasa de acierto sostenida superior al 65% en docenas</li>
+            </ul>
+        </div>
+        <div class="card-blur p-8 border-emerald-500/20 bg-emerald-500/5 text-center">
+            <div class="text-sm uppercase tracking-widest text-emerald-400 font-bold mb-2">Estado del Motor</div>
+            <div class="text-5xl font-black text-white mb-2">OPTIMIZADO</div>
+            <div class="text-xs text-gray-500 mono">Última actualización: Marzo 2026</div>
+        </div>
     </div>
 </section>
 
-<section class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
-    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Planes de Suscripción</h2><p class="text-gray-400">Elige tu nivel de análisis y potencia tu estrategia.</p></div>
+<section id="planes" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5">
+    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4 uppercase">Planes Disponibles</h2><p class="text-gray-400 font-medium">Elige tu nivel de acceso al motor.</p></div>
     <div class="grid md:grid-cols-3 gap-8">
-        <div class="card-blur p-8 plan-card flex flex-col">
+        <div class="card-blur p-8 plan-card text-center flex flex-col">
             <h3 class="text-xl font-bold mb-2">BETA TRIAL</h3>
             <div class="text-4xl font-black gold-text mb-6">$0 <span class="text-xs text-gray-500 font-normal">/ 24h</span></div>
-            <ul class="text-xs text-gray-400 mb-8 space-y-3 flex-grow">
+            <ul class="text-xs text-gray-400 mb-8 space-y-4 text-left flex-grow">
                 <li>• 1 Modelo de ML básico</li>
-                <li>• Máximo 30 señales diarias</li>
-                <li>• Registro de backtest limitado</li>
-                <li>• Soporte comunitario</li>
+                <li>• Máximo 30 entradas diarias</li>
+                <li>• Acceso a interfaz estándar</li>
+                <li>• Gestión de riesgo Kelly (Básico)</li>
             </ul>
-            <a href="#auth-section" class="bg-white/5 py-3 rounded-xl font-bold hover:bg-white/10 text-center transition">PROBAR GRATIS</a>
+            <a href="#auth-section" class="block w-full bg-white/10 py-3 rounded-xl font-bold hover:bg-white/20 transition">PROBAR BETA</a>
         </div>
-        <div class="card-blur p-8 plan-card border-yellow-500/40 bg-yellow-500/5 flex flex-col scale-105">
-            <div class="absolute top-0 right-0 bg-yellow-500 text-black text-[8px] font-black px-3 py-1 uppercase tracking-tighter">MÁS POPULAR</div>
+        <div class="card-blur p-8 plan-card border-yellow-500/50 bg-yellow-500/5 text-center flex flex-col scale-105">
+            <div class="absolute top-0 right-0 bg-yellow-500 text-black text-[9px] font-black px-4 py-1 uppercase">RECOMENDADO</div>
             <h3 class="text-xl font-bold mb-2 gold-text">ELITE ENGINE</h3>
             <div class="text-4xl font-black gold-text mb-6">$49 <span class="text-xs text-gray-500 font-normal">/ Mes</span></div>
-            <ul class="text-xs text-gray-200 mb-8 space-y-3 flex-grow font-medium">
-                <li>• 4 Modelos de ML avanzados</li>
-                <li>• Señales ilimitadas 24/7</li>
-                <li>• Gestión de riesgo automatizada</li>
-                <li>• Acceso a API de predicción</li>
-                <li>• Soporte prioritario</li>
+            <ul class="text-xs text-gray-200 mb-8 space-y-4 text-left flex-grow font-medium">
+                <li>• 4 Modelos de ML en paralelo</li>
+                <li>• Entradas ilimitadas</li>
+                <li>• 6 Capas de protección de capital</li>
+                <li>• Alertas de patrones en tiempo real</li>
+                <li>• Soporte 24/7 prioritario</li>
             </ul>
-            <a href="#auth-section" class="bg-yellow-500 text-black py-3 rounded-xl font-black text-center shadow-lg">ADQUIRIR ELITE</a>
+            <a href="#auth-section" class="block w-full bg-yellow-500 text-black py-3 rounded-xl font-black shadow-lg shadow-yellow-500/20">ADQUIRIR ELITE</a>
         </div>
-        <div class="card-blur p-8 plan-card flex flex-col">
-            <h3 class="text-xl font-bold mb-2">LIFETIME ACCESS</h3>
+        <div class="card-blur p-8 plan-card text-center flex flex-col">
+            <h3 class="text-xl font-bold mb-2 font-black">LIFETIME</h3>
             <div class="text-4xl font-black gold-text mb-6">$199 <span class="text-xs text-gray-500 font-normal">/ Único</span></div>
-            <ul class="text-xs text-gray-400 mb-8 space-y-3 flex-grow">
-                <li>• Acceso vitalicio sin cuotas</li>
-                <li>• Todas las actualizaciones futuras</li>
+            <ul class="text-xs text-gray-400 mb-8 space-y-4 text-left flex-grow">
+                <li>• Acceso de por vida</li>
+                <li>• Todas las actualizaciones de ML</li>
                 <li>• Red neuronal personalizada</li>
-                <li>• Consultoría de gestión 1-a-1</li>
+                <li>• Consultoría estratégica directa</li>
             </ul>
-            <a href="#auth-section" class="bg-white/5 py-3 rounded-xl font-bold hover:bg-white/10 text-center transition">ACCESO TOTAL</a>
+            <a href="#auth-section" class="block w-full bg-white/10 py-3 rounded-xl font-bold hover:bg-white/20 transition text-center">ACCESO TOTAL</a>
         </div>
     </div>
 </section>
 
-<section id="auth-section" class="py-20 px-6 max-w-3xl mx-auto border-t border-white/5 text-center">
-    <h2 class="text-4xl font-black mb-10">Desplegar Interfaz</h2>
+<section id="auth-section" class="py-24 px-6 max-w-3xl mx-auto border-t border-white/5 text-center">
     <div class="card-blur p-8 md:p-12 text-left max-w-md mx-auto shadow-2xl border-yellow-500/10">
         <div class="flex border-b border-white/10 mb-8">
             <button class="tab-btn active" id="tab-login" onclick="showTab('login')">INGRESAR</button>
@@ -126,19 +134,19 @@
             <form id="login-form">
                 <input type="text" id="login-username" placeholder="NOMBRE DE USUARIO" required>
                 <input type="password" id="login-password" placeholder="CONTRASEÑA" required>
-                <button type="submit">Iniciar Sesión →</button>
+                <button type="submit" style="background: var(--gold); color: black;">Desplegar Interfaz →</button>
             </form>
         </div>
         
         <div id="content-register" class="tab-content">
             <form id="register-form">
-                <input type="text" id="reg-username" placeholder="CREAR USUARIO" required>
+                <input type="text" id="reg-username" placeholder="NUEVO USUARIO" required>
                 <input type="email" id="reg-email" placeholder="CORREO ELECTRÓNICO" required>
                 <input type="password" id="reg-password" placeholder="CONTRASEÑA" required>
                 <div class="flex items-start gap-3 mb-6 p-4 bg-red-900/10 rounded-lg border border-red-500/30">
                     <input type="checkbox" id="reg-legal" required class="mt-1">
                     <label for="reg-legal" class="text-[10px] text-gray-300 leading-tight">
-                        Confirmo que soy mayor de edad y que entiendo que D.A.N.N.A es un motor de análisis probabilístico. Asumo total responsabilidad de su uso.
+                        Confirmo que soy mayor de edad (18+). D.A.N.N.A es una herramienta de <b>análisis probabilístico</b>. Asumo responsabilidad total de su uso.
                     </label>
                 </div>
                 <button type="submit" id="reg-btn">SOLICITAR ACCESO BETA</button>
@@ -148,13 +156,11 @@
     </div>
 </section>
 
-<footer class="py-12 text-center text-[10px] text-gray-600 border-t border-white/5">
-    <p class="uppercase tracking-widest mb-2 font-bold">D.A.N.N.A. — Vanguardia Probabilística 2026</p>
-    <p>Bogotá, Colombia. Todos los derechos reservados.</p>
+<footer class="py-12 text-center text-[10px] text-gray-600 border-t border-white/5 font-bold uppercase tracking-[0.3em]">
+    D.A.N.N.A. — Vanguardia Probabilística 2026. Bogotá, Colombia.
 </footer>
 
 <script>
-    // CONFIG FINAL
     const RAILWAY_URL = "https://api.dannaengine.com";
 
     function showTab(type) { 
