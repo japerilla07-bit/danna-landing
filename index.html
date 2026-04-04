@@ -3,216 +3,665 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D.A.N.N.A. — Motor de Análisis Probabilístico</title>
+<title>D.A.N.N.A. — Ventaja Algorítmica para Ruleta</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --bg-deep: #05070a; --bg-card: #0f172a; --neon: #00ff88; --gold: #ffd700; --gold-dim: #b8960f; --text-primary: #f8fafc; --border: rgba(255,255,255,0.08); }
-    body { background-color: var(--bg-deep); color: var(--text-primary); font-family: 'Montserrat', sans-serif; line-height: 1.6; overflow-x: hidden; scroll-behavior: smooth; }
-    .gold-text { background: linear-gradient(90deg, #ffd700, #fff7ad, #b8960f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
-    .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-    .card-blur { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: 24px; }
-    .tab-btn { background: transparent; border: none; color: #475569; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; padding: 1rem; cursor: pointer; transition: all 0.3s; border-bottom: 2px solid transparent; width: 50%; }
-    .tab-btn.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
-    .tab-content { display: none; padding-top: 1rem; }
-    .tab-content.active { display: block; animation: slideUp 0.4s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    input[type="text"], input[type="password"], input[type="email"] { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; color: white; width: 100%; margin-bottom: 1rem; outline: none; transition: all 0.3s; }
-    input:focus { border-color: var(--gold); }
-    button[type="submit"] { cursor: pointer; border-radius: 12px; padding: 1rem; width: 100%; text-transform: uppercase; font-weight: 900; letter-spacing: 0.1em; transition: all 0.3s; }
-    #login-form button { background: var(--gold); color: black; border: none; }
-    #login-form button:hover { background: #fff; }
-    #register-form button { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
-    #register-form button:hover { background: var(--gold); color: black; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg:     #03050a;
+    --panel:  #080c14;
+    --cyan:   #ffd700;
+    --amber:  #b8960f;
+    --green:  #fff7ad;
+    --dim:    rgba(255,215,0,0.10);
+    --border: rgba(255,215,0,0.14);
+    --text:   #f8fafc;
+    --muted:  rgba(248,250,252,0.45);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── Scanline overlay ── */
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 3px,
+      rgba(255,215,0,0.010) 3px, rgba(255,215,0,0.010) 4px
+    );
+  }
+
+  /* ── Typography ── */
+  .font-head { font-family: 'Orbitron', monospace; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Gradient text ── */
+  .grad-cyan {
+    background: linear-gradient(90deg, #ffd700, #fff7ad, #b8960f);
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    animation: holo 8s ease-in-out infinite;
+  }
+  .grad-amber {
+    background: linear-gradient(90deg, var(--amber), #fff7ad, var(--amber));
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  @keyframes holo {
+    0%,100%{background-position:0% 50%} 50%{background-position:100% 50%}
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .card-glow {
+    box-shadow: 0 0 40px rgba(255,215,0,0.06);
+  }
+
+  /* ── Fade in ── */
+  .fade { opacity:0; transform:translateY(24px); transition: all 0.9s cubic-bezier(0.22,1,0.36,1); }
+  .fade.visible { opacity:1; transform:translateY(0); }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 auto;
+  }
+
+  /* ── Stat chip ── */
+  .stat-chip {
+    display:flex; flex-direction:column; align-items:center;
+    padding: 20px 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .stat-chip .val { font-family:'Orbitron',monospace; font-weight:700; font-size:1.6rem; line-height:1; }
+  .stat-chip .lbl { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--muted); margin-top:6px; text-transform:uppercase; }
+
+  /* ── Science cards ── */
+  .sci-card {
+    padding: 28px;
+    background: rgba(255,215,0,0.04);
+    border: 1px solid var(--border);
+    border-left: 3px solid #ffd700;
+    border-radius: 4px;
+  }
+
+  /* ── Plan cards ── */
+  .plan-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .plan-card:hover {
+    border-color: rgba(255,215,0,0.30);
+    box-shadow: 0 0 24px rgba(255,215,0,0.08);
+  }
+  .plan-card.featured {
+    border-color: var(--amber);
+    box-shadow: 0 0 30px rgba(232,160,32,0.12);
+    background: rgba(232,160,32,0.04);
+  }
+
+  /* ── CTA Buttons ── */
+  .btn-primary {
+    display:inline-block; text-align:center;
+    background: transparent;
+    border: 1px solid #ffd700;
+    color: #ffd700;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background: #ffd700;
+    color: #000;
+    box-shadow: 0 0 20px rgba(255,215,0,0.30);
+  }
+  .btn-amber {
+    display:inline-block; text-align:center;
+    background: var(--amber);
+    border: 1px solid var(--amber);
+    color: #000;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    width: 100%;
+  }
+  .btn-amber:hover {
+    background: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 20px rgba(232,160,32,0.30);
+  }
+  .btn-outline {
+    display:inline-block; text-align:center;
+    background: transparent;
+    border: 1px solid rgba(255,215,0,0.22);
+    color: var(--muted);
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    width: 100%;
+  }
+  .btn-outline:hover {
+    border-color: #ffd700;
+    color: #ffd700;
+  }
+
+  /* ── Form inputs ── */
+  .field {
+    width: 100%;
+    background: rgba(4,8,14,0.85);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field:focus { border-color: rgba(255,215,0,0.55); }
+  .field::placeholder { color: var(--muted); }
+
+  /* ── Badge ── */
+  .badge {
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:8px; letter-spacing:2px; text-transform:uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  /* ── Alert bar ── */
+  .alert-bar {
+    background: rgba(224,48,64,0.08);
+    border-bottom: 1px solid rgba(224,48,64,0.18);
+    padding: 8px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(224,48,64,0.85);
+    text-transform: uppercase;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(3,5,10,0.90);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ── Checkbox ── */
+  input[type="checkbox"] { accent-color: #ffd700; width:15px; height:15px; }
+
+  /* ── Pulse dot ── */
+  .pulse-dot {
+    width: 7px; height: 7px; border-radius:50%;
+    background: #ffd700;
+    display:inline-block;
+    box-shadow: 0 0 8px rgba(255,215,0,0.6);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* ── Exclusive bar ── */
+  .exclusive-bar {
+    background: rgba(232,160,32,0.06);
+    border: 1px solid rgba(232,160,32,0.20);
+    border-radius: 6px;
+    padding: 20px 28px;
+    display:flex; align-items:center; gap:16px;
+  }
+
+  /* Responsive */
+  @media(max-width:768px){
+    .stat-chip .val { font-size:1.2rem; }
+  }
 </style>
 </head>
 <body>
 
-<div class="bg-red-600/10 border-b border-red-500/20 py-2 text-center text-[10px] md:text-xs font-bold tracking-widest text-red-500 uppercase">
-    ⚠️ ALERTA: Solo quedan <span id="fomo-counter">14</span> licencias Beta disponibles.
+<!-- ── ALERT BAR ── -->
+<div class="alert-bar">
+  ◈ Acceso limitado activo &nbsp;·&nbsp; <span id="fomo-count">14</span> licencias disponibles &nbsp;·&nbsp; El cupo cierra cuando se completa la capacidad operativa
 </div>
 
-<header class="pt-20 pb-16 px-6 text-center max-w-5xl mx-auto">
-    <div class="text-xs uppercase tracking-[0.3em] gold-text mb-2 font-bold">MOTOR DE ANALISIS PROBABILISTICO v1.0</div>
-    <h1 class="text-7xl md:text-[8rem] font-black mb-2 tracking-tighter fade-in gold-text leading-none">D.A.N.N.A</h1>
-    <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter fade-in text-white leading-tight">No es Azar. <br><span class="text-gray-400">Es Ingeniería.</span></h2>
-    <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mb-6 fade-in font-medium">D.A.N.N.A analiza patrones probabilísticos en tiempo real para detectar sectores de alta frecuencia en la ruleta. Optimiza tu bankroll con datos, no con corazonadas.</p>
-    <p class="text-gray-500 text-sm max-w-3xl mx-auto mb-10 fade-in">4 modelos de Machine Learning. 6 capas de protección. Análisis en tiempo real. Gestión de riesgo automatizada. Validado sobre 8,151 spins reales.</p>
-    <div class="fade-in mb-16"><a href="#auth-section" class="inline-block bg-yellow-500 text-black font-black px-12 py-4 rounded-xl uppercase tracking-widest hover:bg-white transition shadow-[0_0_20px_rgba(255,215,0,0.3)]">SOLICITAR ACCESO →</a></div>
+<!-- ── NAV ── -->
+<nav>
+  <div class="font-head text-sm font-bold tracking-widest" style="color:#ffd700;">D.A.N.N.A.</div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span class="pulse-dot"></span>
+    <span class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);">SISTEMA OPERATIVO</span>
+  </div>
+  <a href="#registro" class="btn-primary" style="padding:8px 20px;font-size:9px;">ACCEDER AL TERMINAL →</a>
+</nav>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto fade-in">
-        <div class="card-blur p-6"><div id="counter-patterns" class="text-3xl font-bold gold-text mono">954</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Patrones (24h)</div></div>
-        <div class="card-blur p-6"><div id="counter-accuracy" class="text-3xl font-bold text-emerald-400 mono">68.1%</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Hit Rate Docenas</div></div>
-        <div class="card-blur p-6"><div class="text-3xl font-bold text-blue-400 mono">8,151</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Spins Analizados</div></div>
-        <div class="card-blur p-6"><div class="text-3xl font-bold text-purple-400 mono">4</div><div class="text-[10px] text-gray-500 uppercase font-bold mt-2">Modelos ML</div></div>
-    </div>
-</header>
 
-<section class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5 fade-in">
-    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Cómo Funciona</h2><p class="text-gray-400">3 pasos. Sin complicaciones. Sin curva de aprendizaje.</p></div>
-    <div class="grid md:grid-cols-3 gap-8">
-        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">01 🔒</div><h3 class="text-xl font-bold mb-2 gold-text">Conecta</h3><p class="text-sm text-gray-400">Accede desde cualquier dispositivo. Sin descargas. Sin instalación. Solo tu navegador y tu sesión en el casino.</p></div>
-        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">02 ⚡</div><h3 class="text-xl font-bold mb-2 gold-text">Analiza</h3><p class="text-sm text-gray-400">Ingresa los números en tiempo real. D.A.N.N.A. procesa con 4 modelos de ML y 6 capas de protección simultáneamente.</p></div>
-        <div class="card-blur p-8 text-center"><div class="text-4xl mb-4">03 🎯</div><h3 class="text-xl font-bold mb-2 gold-text">Ejecuta</h3><p class="text-sm text-gray-400">Recibe señales con nivel de confianza, tipo de apuesta y sizing óptimo (Kelly). Tú decides. El motor informa.</p></div>
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="text-center px-6 pt-28 pb-20 max-w-5xl mx-auto">
+
+  <div class="fade" style="margin-bottom:16px;">
+    <span class="badge" style="border-color:rgba(255,215,0,0.30);color:var(--muted);">
+      Motor Predictivo · Versión 1.0 · Validado sobre 8,151 Spins
+    </span>
+  </div>
+
+  <h1 class="fade font-head font-black grad-cyan" style="font-size:clamp(3rem,10vw,7rem);letter-spacing:-1px;line-height:1;margin-bottom:12px;">
+    D.A.N.N.A.
+  </h1>
+
+  <h2 class="fade font-head font-bold" style="font-size:clamp(1.1rem,3vw,2rem);color:rgba(200,220,232,0.85);letter-spacing:2px;margin-bottom:24px;">
+    La aleatoriedad es una ilusión.<br>
+    <span style="color:var(--muted);font-weight:400;">Lo que parece caos tiene estructura. Nosotros la procesamos.</span>
+  </h2>
+
+  <p class="fade" style="max-width:640px;margin:0 auto 36px;color:var(--muted);font-size:15px;line-height:1.8;">
+    D.A.N.N.A. es un motor de análisis probabilístico de alta precisión. Procesa patrones de frecuencia, firmas de crupier y ciclos de sector en tiempo real para entregar vectores de ejecución con confianza calculada — no intuición.
+  </p>
+
+  <div class="fade" style="margin-bottom:56px;">
+    <a href="#registro" class="btn-primary" style="font-size:12px;padding:16px 48px;">
+      ◈ ACCEDER AL TERMINAL
+    </a>
+    <p style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--muted);">
+      Registro en 60 segundos · Sin tarjeta requerida para Trial
+    </p>
+  </div>
+
+  <!-- Stats row -->
+  <div class="fade" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:700px;margin:0 auto;">
+    <div class="stat-chip">
+      <span class="val" style="color:#ffd700;">68.1%</span>
+      <span class="lbl">Hit Rate Docenas</span>
     </div>
+    <div class="stat-chip">
+      <span class="val" style="color:#ffd700;">8,151</span>
+      <span class="lbl">Spins Validados</span>
+    </div>
+    <div class="stat-chip">
+      <span class="val" style="color:var(--amber);">+838u</span>
+      <span class="lbl">PnL Backtest</span>
+    </div>
+    <div class="stat-chip">
+      <span class="val" style="color:#ffd700;">5</span>
+      <span class="lbl">Modelos ML</span>
+    </div>
+  </div>
+
 </section>
 
-<section class="py-20 px-6 max-w-5xl mx-auto border-t border-white/5 fade-in">
-    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Resultados del Backtest</h2><p class="text-gray-400">Validado con datos reales. Sin simulaciones ficticias.</p></div>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono">8,151</div><div class="text-xs text-gray-500 uppercase mt-1">Spins Testeados</div></div>
-        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-emerald-400">+838u</div><div class="text-xs text-gray-500 uppercase mt-1">PnL Combinado</div></div>
-        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono gold-text">68.14%</div><div class="text-xs text-gray-500 uppercase mt-1">Hit Rate Docenas</div></div>
-        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono gold-text">34.90%</div><div class="text-xs text-gray-500 uppercase mt-1">Hit Rate Guardian</div></div>
-        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-emerald-400">+372u</div><div class="text-xs text-gray-500 uppercase mt-1">PnL Guardian</div></div>
-        <div class="card-blur p-6 text-center"><div class="text-2xl font-black mono text-blue-400">3.81</div><div class="text-xs text-gray-500 uppercase mt-1">Profit Factor</div></div>
+<div class="divider" style="max-width:900px;"></div>
+
+
+<!-- ══════════════════════════════════════════════
+     THE SCIENCE
+══════════════════════════════════════════════ -->
+<section class="px-6 py-24 max-w-5xl mx-auto">
+
+  <div class="fade text-center" style="margin-bottom:56px;">
+    <div class="font-mono" style="font-size:9px;letter-spacing:3px;color:#ffd700;margin-bottom:10px;">◈ ARQUITECTURA</div>
+    <h2 class="font-head font-bold" style="font-size:clamp(1.5rem,3vw,2.2rem);color:var(--text);">
+      The Science Behind the Edge
+    </h2>
+    <p style="color:var(--muted);margin-top:10px;font-size:14px;max-width:520px;margin-inline:auto;">
+      Tres pilares técnicos que convierten el ruido estadístico en vectores de ejecución accionables.
+    </p>
+  </div>
+
+  <div class="fade" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+
+    <div class="sci-card">
+      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:#ffd700;margin-bottom:14px;">01 · ENSEMBLE NEURAL</div>
+      <h3 class="font-head" style="font-size:16px;color:var(--text);margin-bottom:10px;">Red de Modelos Adaptativos</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.8;">
+        Cinco modelos operan en paralelo — FreqDecay, Markov, NaiveBayes, LSTM y WheelExpert físico. Un meta-learner pondera sus votos con pesos adaptativos en tiempo real según su rendimiento reciente.
+      </p>
     </div>
+
+    <div class="sci-card">
+      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:#ffd700;margin-bottom:14px;">02 · ANÁLISIS DE CICLOS</div>
+      <h3 class="font-head" style="font-size:16px;color:var(--text);margin-bottom:10px;">Detección de Patrones Físicos</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.8;">
+        WheelExpert Premium analiza la firma del crupier, el scatter de la bola y la dominancia de sector en la rueda europea. Cuando hay patrón físico detectable, el sistema lo extrae y lo traduce en probabilidades accionables.
+      </p>
+    </div>
+
+    <div class="sci-card">
+      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:#ffd700;margin-bottom:14px;">03 · GESTIÓN DE VARIANZA</div>
+      <h3 class="font-head" style="font-size:16px;color:var(--text);margin-bottom:10px;">Protocolo de Capital Óptimo</h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.8;">
+        El indicador OPTIMAL / CAUTION / ABORT evalúa en tiempo real el score de la mesa, la entropía del sistema y los errores consecutivos. Cuando las condiciones son adversas, el motor lo indica antes de que el capital esté en riesgo.
+      </p>
+    </div>
+
+  </div>
+
 </section>
 
-<section id="planes" class="py-20 px-6 max-w-6xl mx-auto border-t border-white/5 fade-in">
-    <div class="text-center mb-16"><h2 class="text-4xl font-black mb-4">Planes</h2><p class="text-gray-400">Sin contratos. Sin permanencia. Paga solo cuando juegas.</p></div>
-    <div class="grid md:grid-cols-4 gap-6">
-        <div class="card-blur p-8 flex flex-col"><h3 class="font-bold">Trial</h3><div class="text-4xl font-black my-4">$0</div><p class="text-xs text-gray-500 mb-6">250 Spins totales / Un solo uso</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Motor completo</li><li>• Sin compromiso</li><li>• Prueba extendida</li></ul><a href="#auth-section" class="w-full text-center py-3 border border-white/20 rounded-xl text-[10px] font-bold uppercase hover:bg-white/10 transition block">PROBAR GRATIS</a></div>
-        <div class="card-blur p-8 flex flex-col"><h3 class="font-bold">Daily Pass</h3><div class="text-4xl font-black my-4">$10</div><p class="text-xs text-gray-500 mb-6">Acceso por 24 horas</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Spins ilimitados</li><li>• Motor completo</li><li>• Activo al instante</li></ul><a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/37c43de7-50c1-4af0-9a05-f38d560904ac" target="_blank" class="w-full text-center py-3 border border-white/20 rounded-xl text-[10px] font-bold uppercase hover:bg-white/10 transition block">COMPRAR — $10</a></div>
-        <div class="card-blur p-8 flex flex-col border-yellow-500/50 relative transform md:-translate-y-4 bg-yellow-900/10"><div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[9px] font-black px-3 py-1 rounded-full uppercase">MAS POPULAR</div><h3 class="font-bold gold-text">Weekly Pro</h3><div class="text-4xl font-black my-4">$25</div><p class="text-xs text-yellow-500/50 mb-6 font-bold">Acceso por 7 dias</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Soporte prioritario</li><li>• Spins ilimitados</li><li>• Actualizaciones de algoritmo</li></ul><a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/419251fb-20e5-4aac-89ce-16454ca04364" target="_blank" class="w-full text-center py-3 bg-yellow-500 text-black rounded-xl text-[10px] font-black uppercase hover:bg-white transition block">COMPRAR — $25</a></div>
-        <div class="card-blur p-8 flex flex-col"><h3 class="font-bold">Monthly Elite</h3><div class="text-4xl font-black my-4">$75</div><p class="text-xs text-gray-500 mb-6 text-center leading-tight">Pago mensual — cancela cuando quieras</p><ul class="text-xs space-y-3 mb-8 flex-grow"><li>• Acceso total 30 días</li><li>• Spins ilimitados</li><li>• Todas las actualizaciones</li><li>• Soporte dedicado</li></ul><a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/5c1e937e-71c2-43c4-a328-20d9350ca1b4" target="_blank" class="w-full text-center py-3 border border-white/20 rounded-xl text-[10px] font-bold uppercase hover:bg-white/10 transition block">SUSCRIBIRSE — $75/mes</a></div>
+<div class="divider" style="max-width:900px;"></div>
+
+
+<!-- ══════════════════════════════════════════════
+     EXCLUSIVITY
+══════════════════════════════════════════════ -->
+<section class="px-6 py-16 max-w-4xl mx-auto fade">
+  <div class="exclusive-bar">
+    <div style="flex:0 0 auto;">
+      <div class="font-head" style="font-size:11px;letter-spacing:2px;color:var(--amber);">◈ ACCESO RESTRINGIDO</div>
     </div>
+    <div style="flex:1;">
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;">
+        El cupo de operadores activos es deliberadamente limitado. Un número elevado de usuarios simultáneos sobre los mismos patrones de mesa reduce la ventaja algorítmica colectiva. D.A.N.N.A. no es un producto masivo — es una herramienta para quienes toman el riesgo en serio.
+      </p>
+    </div>
+  </div>
 </section>
 
-<section id="auth-section" class="py-20 px-6 max-w-3xl mx-auto border-t border-white/5 fade-in text-center">
-    <h2 class="text-4xl font-black mb-4">La mesa esta abierta.</h2>
-    <p class="text-gray-400 mb-10">Mientras lees esto, alguien ya esta operando con D.A.N.N.A.</p>
-    <div class="card-blur p-8 md:p-12 text-left max-w-md mx-auto shadow-2xl border-yellow-500/20">
-        <div class="flex border-b border-white/10 mb-8"><button class="tab-btn active" id="tab-login" onclick="showTab('login')">INGRESAR</button><button class="tab-btn" id="tab-register" onclick="showTab('register')">REGISTRO</button></div>
-        
-        <div id="content-login" class="tab-content active">
-            <form id="login-form">
-                <input type="text" id="login-username" placeholder="NOMBRE DE USUARIO" required>
-                <input type="password" id="login-password" placeholder="CONTRASEÑA" required>
-                <button type="submit">Desplegar Interfaz</button>
-                <p id="login-error" class="text-red-500 text-[10px] mt-4 text-center hidden"></p>
-            </form>
-        </div>
-        
-        <div id="content-register" class="tab-content">
-            <form id="register-form">
-                <input type="text" id="reg-username" placeholder="NUEVO USUARIO" required>
-                <input type="email" id="reg-email" placeholder="CORREO ELECTRÓNICO" required>
-                <input type="password" id="reg-password" placeholder="CONTRASEÑA" required>
-                
-                <div class="flex items-start gap-3 mb-6 p-4 bg-red-900/10 rounded-lg border border-red-500/30">
-                    <input type="checkbox" id="reg-legal" required class="mt-1 accent-yellow-500" style="min-width: 16px; min-height: 16px;">
-                    <label for="reg-legal" class="text-[10px] text-gray-300 leading-tight">
-                        <b>Soy mayor de edad (18+).</b> Confirmo que D.A.N.N.A es una herramienta de <b>análisis probabilístico</b> y asumo el 100% del riesgo. Entiendo que mis <b>250 Spins de prueba</b> no garantizan ganancias financieras.
-                    </label>
-                </div>
-                
-                <button type="submit" id="reg-btn">CREAR CUENTA →</button>
-                <p id="reg-msg" class="text-[10px] mt-4 text-center hidden"></p>
-            </form>
-        </div>
+<div class="divider" style="max-width:900px;"></div>
+
+
+<!-- ══════════════════════════════════════════════
+     PLANES
+══════════════════════════════════════════════ -->
+<section id="planes" class="px-6 py-24 max-w-5xl mx-auto">
+
+  <div class="fade text-center" style="margin-bottom:56px;">
+    <div class="font-mono" style="font-size:9px;letter-spacing:3px;color:#ffd700;margin-bottom:10px;">◈ LICENCIAS</div>
+    <h2 class="font-head font-bold" style="font-size:clamp(1.5rem,3vw,2.2rem);">Adquiere Tu Licencia de Acceso</h2>
+    <p style="color:var(--muted);margin-top:10px;font-size:14px;">
+      Sin contratos. Sin permanencia. Activa solo cuando vayas a operar.
+    </p>
+  </div>
+
+  <div class="fade" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:start;">
+
+    <!-- Trial -->
+    <div class="plan-card">
+      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:16px;">ENTRADA</div>
+      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Trial Access</div>
+      <div class="font-head font-black" style="font-size:2.5rem;color:var(--cyan);line-height:1;margin-bottom:4px;">$0</div>
+      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">250 spins · Un solo uso</div>
+      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+        <li>· Motor completo</li>
+        <li>· Sin tarjeta requerida</li>
+        <li>· WheelExpert activo</li>
+      </ul>
+      <a href="#registro" class="btn-outline">INICIAR TRIAL →</a>
     </div>
+
+    <!-- Daily -->
+    <div class="plan-card">
+      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:16px;">SESIÓN</div>
+      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Daily Pass</div>
+      <div class="font-head font-black" style="font-size:2.5rem;color:var(--cyan);line-height:1;margin-bottom:4px;">$10</div>
+      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">Acceso 24 horas · Ilimitado</div>
+      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+        <li>· Spins ilimitados</li>
+        <li>· Motor completo</li>
+        <li>· Activación inmediata</li>
+      </ul>
+      <a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/37c43de7-50c1-4af0-9a05-f38d560904ac"
+         target="_blank" class="btn-outline">ADQUIRIR LICENCIA — $10 →</a>
+    </div>
+
+    <!-- Weekly — FEATURED -->
+    <div class="plan-card featured" style="position:relative;">
+      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);">
+        <span class="badge" style="border-color:var(--amber);color:var(--amber);background:rgba(232,160,32,0.12);">
+          MÁS SELECCIONADO
+        </span>
+      </div>
+      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--amber);margin-bottom:16px;">OPERACIONAL</div>
+      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Weekly Pro</div>
+      <div class="font-head font-black grad-amber" style="font-size:2.5rem;line-height:1;margin-bottom:4px;">$25</div>
+      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">7 días · Acceso total</div>
+      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+        <li>· Spins ilimitados</li>
+        <li>· Soporte prioritario</li>
+        <li>· Actualizaciones de algoritmo</li>
+        <li>· Todas las categorías activas</li>
+      </ul>
+      <a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/419251fb-20e5-4aac-89ce-16454ca04364"
+         target="_blank" class="btn-amber">ADQUIRIR LICENCIA — $25 →</a>
+    </div>
+
+    <!-- Monthly -->
+    <div class="plan-card">
+      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:16px;">ÉLITE</div>
+      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Monthly Elite</div>
+      <div class="font-head font-black" style="font-size:2.5rem;color:var(--cyan);line-height:1;margin-bottom:4px;">$75</div>
+      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">30 días · Máxima cobertura</div>
+      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+        <li>· Spins ilimitados</li>
+        <li>· Soporte dedicado</li>
+        <li>· Todas las actualizaciones</li>
+        <li>· Acceso prioritario a nuevas versiones</li>
+      </ul>
+      <a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/5c1e937e-71c2-43c4-a328-20d9350ca1b4"
+         target="_blank" class="btn-outline">ADQUIRIR LICENCIA — $75 →</a>
+    </div>
+
+  </div>
+
+  <!-- Nota email -->
+  <div class="fade" style="margin-top:24px;text-align:center;">
+    <p class="font-mono" style="font-size:10px;color:var(--muted);letter-spacing:1px;">
+      ◈ Usa el mismo email en LemonSqueezy y en tu registro D.A.N.N.A. — la activación es automática.
+    </p>
+  </div>
+
 </section>
 
-<footer class="py-12 text-center text-[10px] text-gray-600 border-t border-white/5"><p class="uppercase tracking-widest mb-2 font-bold">D.A.N.N.A. — Vanguardia Probabilística 2026</p><p>Bogotá, Colombia. El uso de este motor es estrictamente analítico.</p></footer>
+<div class="divider" style="max-width:900px;"></div>
+
+
+<!-- ══════════════════════════════════════════════
+     REGISTRO
+══════════════════════════════════════════════ -->
+<section id="registro" class="px-6 py-24 max-w-lg mx-auto">
+
+  <div class="fade text-center" style="margin-bottom:40px;">
+    <div class="font-mono" style="font-size:9px;letter-spacing:3px;color:#ffd700;margin-bottom:10px;">◈ ACCESO</div>
+    <h2 class="font-head font-bold" style="font-size:clamp(1.4rem,3vw,2rem);">Crear Cuenta de Operador</h2>
+    <p style="color:var(--muted);margin-top:10px;font-size:13px;line-height:1.7;">
+      Registra tu cuenta. Luego adquiere tu licencia arriba.<br>
+      La activación es automática al confirmar el pago.
+    </p>
+  </div>
+
+  <div class="fade card card-glow" style="padding:36px;">
+
+    <form id="register-form" autocomplete="off">
+
+      <div style="margin-bottom:14px;">
+        <label class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px;">NOMBRE DE USUARIO</label>
+        <input type="text" id="reg-username" class="field" placeholder="minimo 3 caracteres" required>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px;">CORREO ELECTRÓNICO</label>
+        <input type="email" id="reg-email" class="field" placeholder="el mismo que usarás en LemonSqueezy" required>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px;">CONTRASEÑA</label>
+        <input type="password" id="reg-password" class="field" placeholder="mínimo 6 caracteres" required>
+      </div>
+
+      <div style="margin-bottom:24px;padding:16px;background:rgba(224,48,64,0.05);border:1px solid rgba(224,48,64,0.18);border-radius:4px;display:flex;gap:12px;align-items:flex-start;">
+        <input type="checkbox" id="reg-legal" required style="margin-top:2px;">
+        <label for="reg-legal" class="font-mono" style="font-size:10px;color:var(--muted);line-height:1.6;cursor:pointer;">
+          Soy mayor de edad (18+). Entiendo que D.A.N.N.A. es una herramienta de
+          <strong style="color:var(--text);">análisis probabilístico</strong>, no una garantía de resultados financieros.
+          Asumo el 100% del riesgo operativo.
+        </label>
+      </div>
+
+      <button type="submit" id="reg-btn" class="btn-primary" style="width:100%;padding:15px;font-size:11px;">
+        ◈ CREAR CUENTA DE OPERADOR →
+      </button>
+
+      <div id="reg-msg" style="display:none;margin-top:16px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;"></div>
+
+    </form>
+
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);text-align:center;">
+      <p class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:8px;">¿Ya tienes cuenta?</p>
+      <a href="https://app.dannaengine.com" target="_blank" class="btn-outline" style="display:inline-block;width:auto;padding:10px 28px;">
+        ACCEDER AL TERMINAL →
+      </a>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer style="border-top:1px solid var(--border);padding:40px 24px;text-align:center;">
+  <div class="font-head" style="font-size:11px;letter-spacing:3px;color:#ffd700;margin-bottom:8px;">D.A.N.N.A.</div>
+  <p class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);">
+    MOTOR DE ANÁLISIS PROBABILÍSTICO · BOGOTÁ, COLOMBIA · 2026
+  </p>
+  <p class="font-mono" style="font-size:9px;color:var(--muted);margin-top:6px;opacity:0.6;">
+    El uso de este sistema es estrictamente analítico. No garantiza resultados financieros.
+  </p>
+</footer>
+
 
 <script>
-    const RAILWAY_URL = "https://danna-engine-production.up.railway.app";
+  const API_URL = "https://api.dannaengine.com";
 
-    const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    
-    function showTab(type) { 
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
-        document.getElementById('tab-' + type).classList.add('active'); 
-        document.getElementById('content-' + type).classList.add('active');
-        document.querySelectorAll('#login-error, #reg-msg').forEach(m => m.classList.add('hidden'));
+  // ── Fade observer ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+
+  // ── FOMO counter ──
+  const fomoEl = document.getElementById('fomo-count');
+  if(fomoEl) {
+    setInterval(() => {
+      let v = parseInt(fomoEl.textContent);
+      if(v > 4 && Math.random() > 0.75) fomoEl.textContent = (v-1).toString();
+    }, 18000);
+  }
+
+  // ── Register form ──
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const u   = document.getElementById('reg-username').value.trim();
+    const em  = document.getElementById('reg-email').value.trim();
+    const p   = document.getElementById('reg-password').value;
+    const leg = document.getElementById('reg-legal').checked;
+    const msg = document.getElementById('reg-msg');
+    const btn = document.getElementById('reg-btn');
+
+    msg.style.display = 'none';
+
+    if(!leg) {
+      msg.style.display = 'block';
+      msg.style.color = '#e03040';
+      msg.textContent = '◈ Debes aceptar los términos para continuar.';
+      return;
     }
-    
-    function animateCounter(id, target, suffix) { 
-        const el = document.getElementById(id); 
-        if (!el) return; 
-        let current = 0; 
-        const step = target / 60; 
-        const timer = setInterval(() => { 
-            current += step; 
-            if (current >= target) { current = target; clearInterval(timer); } 
-            el.textContent = (Number.isInteger(target) ? Math.floor(current).toLocaleString() : current.toFixed(1)) + (suffix || ''); 
-        }, 30); 
+    if(u.length < 3) {
+      msg.style.display = 'block';
+      msg.style.color = '#e03040';
+      msg.textContent = '◈ Usuario mínimo 3 caracteres.';
+      return;
     }
-    
-    setInterval(() => { 
-        const el = document.getElementById('counter-patterns'); 
-        if (el) { 
-            let v = parseInt(el.textContent.replace(/,/g, '')) || 954; 
-            v += Math.floor(Math.random() * 3) + 1; 
-            el.textContent = v.toLocaleString(); 
-        } 
-    }, 5000);
-    
-    const fomoEl = document.getElementById('fomo-counter'); 
-    if (fomoEl) { 
-        setInterval(() => { 
-            let v = parseInt(fomoEl.textContent); 
-            if (v > 3 && Math.random() > 0.8) fomoEl.textContent = (v - 1).toString(); 
-        }, 15000); 
+    if(p.length < 6) {
+      msg.style.display = 'block';
+      msg.style.color = '#e03040';
+      msg.textContent = '◈ Contraseña mínimo 6 caracteres.';
+      return;
     }
-    
-    window.onload = () => { animateCounter('counter-accuracy', 68.1, '%'); };
 
-    // Login — redirect to Streamlit
-    document.getElementById('login-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        window.location.href = "https://app.dannaengine.com";
-    });
+    btn.disabled = true;
+    btn.textContent = '◈ PROCESANDO...';
 
-    // Register — call API
-    document.getElementById('register-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const u = document.getElementById('reg-username').value.trim();
-        const em = document.getElementById('reg-email').value.trim();
-        const p = document.getElementById('reg-password').value;
-        const legal = document.getElementById('reg-legal').checked;
-        const msgEl = document.getElementById('reg-msg');
-        const btn = document.getElementById('reg-btn');
+    try {
+      const res  = await fetch(API_URL + '/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: u, password: p, email: em })
+      });
+      const data = await res.json();
+      msg.style.display = 'block';
 
-        if (!legal) { msgEl.classList.remove('hidden'); msgEl.className = 'text-red-500 text-[10px] mt-4 text-center'; msgEl.textContent = 'Debes aceptar los terminos.'; return; }
-        if (u.length < 3) { msgEl.classList.remove('hidden'); msgEl.className = 'text-red-500 text-[10px] mt-4 text-center'; msgEl.textContent = 'Usuario minimo 3 caracteres.'; return; }
-        if (p.length < 6) { msgEl.classList.remove('hidden'); msgEl.className = 'text-red-500 text-[10px] mt-4 text-center'; msgEl.textContent = 'Contrasena minimo 6 caracteres.'; return; }
+      if(data.success) {
+        msg.style.color = '#ffd700';
+        msg.innerHTML = (
+          '◈ Cuenta creada exitosamente.<br>' +
+          '<span style="color:rgba(155,195,212,0.6);font-size:10px;">' +
+          'Adquiere tu licencia arriba usando este mismo email para activación automática.' +
+          '</span>'
+        );
+        document.getElementById('register-form').reset();
+      } else {
+        msg.style.color = '#e03040';
+        msg.textContent = '◈ ' + (data.message || 'Error al crear cuenta.');
+      }
+    } catch(err) {
+      msg.style.display = 'block';
+      msg.style.color = '#e03040';
+      msg.textContent = '◈ Error de conexión. Verifica tu red e intenta de nuevo.';
+    }
 
-        btn.disabled = true;
-        btn.textContent = 'PROCESANDO...';
-
-        try {
-            const res = await fetch(RAILWAY_URL + '/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, password: p, email: em })
-            });
-            const data = await res.json();
-            msgEl.classList.remove('hidden');
-            if (data.success) {
-                msgEl.className = 'text-yellow-500 text-[10px] mt-4 text-center';
-                msgEl.innerHTML = '⏳ ' + data.message;
-                document.getElementById('register-form').reset();
-            } else {
-                msgEl.className = 'text-red-500 text-[10px] mt-4 text-center';
-                msgEl.textContent = data.message;
-            }
-        } catch (err) {
-            msgEl.classList.remove('hidden');
-            msgEl.className = 'text-red-500 text-[10px] mt-4 text-center';
-            msgEl.textContent = 'Error de conexion. Intenta de nuevo.';
-        }
-        btn.disabled = false;
-        btn.textContent = 'CREAR CUENTA →';
-    });
+    btn.disabled = false;
+    btn.textContent = '◈ CREAR CUENTA DE OPERADOR →';
+  });
 </script>
 </body>
 </html>
