@@ -3,265 +3,483 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://api.dannaengine.com; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>D.A.N.N.A. — Ventaja Algorítmica para Ruleta</title>
-<script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;800;900&family=Sora:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* ════════════════════════════════════════════════════════════
+     D.A.N.N.A. · Landing — tema Shinkirō × Lancelot
+     Shinkirō: negro azabache, oro metálico, rojo metálico.
+     Lancelot: blanco perla con filo de oro.
+     Solo diseño: textos, enlaces, formulario y script sin cambios.
+     ════════════════════════════════════════════════════════════ */
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   :root {
-    --bg:     #03050a;
-    --panel:  #080c14;
-    --cyan:   #ffd700;
-    --amber:  #b8960f;
-    --green:  #fff7ad;
-    --dim:    rgba(255,215,0,0.10);
-    --border: rgba(255,215,0,0.14);
-    --text:   #f8fafc;
-    --muted:  rgba(248,250,252,0.45);
+    --bg:        #040405;
+    --bg-2:      #08080a;
+    --panel:     #0b0b0d;
+    --panel-2:   #111114;
+    --gold:      #d4af5a;
+    --gold-hi:   #f3dc9b;
+    --gold-lo:   #8a6a24;
+    --red:       #c8102e;
+    --red-hi:    #ff4d68;
+    --red-lo:    #6b0016;
+    --pearl:     #f5f2ea;
+    --pearl-2:   #e9e3d4;
+    --text:      #f3efe6;
+    --muted:     rgba(243,239,230,0.56);
+    --faint:     rgba(243,239,230,0.34);
+    --line:      rgba(212,175,90,0.18);
+    --line-hi:   rgba(212,175,90,0.42);
+    --metal-gold: linear-gradient(135deg, #6f5418 0%, #c79a3b 18%, #f6e3a4 38%, #d4af5a 52%, #8a6a24 72%, #e9c97a 100%);
+    --metal-red:  linear-gradient(135deg, #4a000e 0%, #8b0a1f 22%, #e0314f 42%, #ffb3bf 50%, #c8102e 62%, #6b0016 100%);
+    --metal-pearl: linear-gradient(160deg, #ffffff 0%, #f5f2ea 40%, #e2dccb 75%, #f8f5ee 100%);
+    --radius:    14px;
   }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--bg);
+    background:
+      radial-gradient(1100px 620px at 12% -8%, rgba(200,16,46,0.13), transparent 60%),
+      radial-gradient(900px 560px at 95% 8%, rgba(212,175,90,0.08), transparent 60%),
+      radial-gradient(1000px 700px at 50% 115%, rgba(139,10,31,0.12), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
     color: var(--text);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-
-  /* ── Scanline overlay ── */
-  body::after {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
-    background: repeating-linear-gradient(
-      0deg, transparent, transparent 3px,
-      rgba(255,215,0,0.010) 3px, rgba(255,215,0,0.010) 4px
-    );
+  /* Grano sutil de metal (sin imágenes externas) */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.5;
+    background:
+      linear-gradient(rgba(212,175,90,0.035) 1px, transparent 1px) 0 0 / 100% 96px,
+      linear-gradient(90deg, rgba(212,175,90,0.025) 1px, transparent 1px) 0 0 / 96px 100%;
+    mask-image: radial-gradient(ellipse at 50% 20%, #000 0%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 20%, #000 0%, transparent 75%);
   }
+  main, nav, footer, .alert-bar { position: relative; z-index: 1; }
+  ::selection { background: rgba(200,16,46,0.55); color:#fff; }
 
-  /* ── Typography ── */
-  .font-head { font-family: 'Orbitron', monospace; }
-  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  /* ── Utilidades (reemplazan el CDN de Tailwind) ── */
+  .text-center { text-align:center; }
+  .mx-auto { margin-left:auto; margin-right:auto; }
+  .px-6 { padding-left:24px; padding-right:24px; }
+  .pt-28 { padding-top:112px; } .pb-20 { padding-bottom:80px; }
+  .py-24 { padding-top:96px; padding-bottom:96px; } .py-16 { padding-top:64px; padding-bottom:64px; }
+  .max-w-5xl { max-width:1040px; } .max-w-4xl { max-width:880px; } .max-w-lg { max-width:540px; }
+  .text-sm { font-size:14px; } .font-bold { font-weight:700; } .font-black { font-weight:900; }
+  .tracking-widest { letter-spacing:.32em; }
 
-  /* ── Gradient text ── */
-  .grad-cyan {
-    background: linear-gradient(90deg, #ffd700, #fff7ad, #b8960f);
-    background-size: 200% 100%;
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
-    animation: holo 8s ease-in-out infinite;
-  }
-  .grad-amber {
-    background: linear-gradient(90deg, var(--amber), #fff7ad, var(--amber));
-    background-size: 200% 100%;
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
-  }
-  @keyframes holo {
-    0%,100%{background-position:0% 50%} 50%{background-position:100% 50%}
-  }
+  /* ── Tipografía ── */
+  .font-brand { font-family:'Orbitron', sans-serif; }
+  .font-head  { font-family:'Sora', 'Inter', sans-serif; letter-spacing:-.01em; }
+  .font-mono  { font-family:'JetBrains Mono', monospace; }
 
-  /* ── Cards ── */
-  .card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+  .gold-text {
+    background: var(--metal-gold); background-size: 220% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .card-glow {
-    box-shadow: 0 0 40px rgba(255,215,0,0.06);
+  .red-text {
+    background: linear-gradient(135deg, #c8102e 0%, #ff4d68 30%, #ffc2cc 48%, #ff3352 62%, #d0122f 100%); background-size: 220% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
+  .brand-shine { animation: shine 7s ease-in-out infinite; }
+  @keyframes shine { 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
 
-  /* ── Fade in ── */
-  .fade { opacity:0; transform:translateY(24px); transition: all 0.9s cubic-bezier(0.22,1,0.36,1); }
-  .fade.visible { opacity:1; transform:translateY(0); }
-
-  /* ── Divider ── */
-  .divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 0 auto;
+  .eyebrow {
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.28em; text-transform:uppercase;
+    color: var(--gold);
   }
+  .eyebrow::before, .eyebrow::after { content:''; width:28px; height:1px; background: var(--metal-gold); }
 
-  /* ── Stat chip ── */
-  .stat-chip {
-    display:flex; flex-direction:column; align-items:center;
-    padding: 20px 24px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-  }
-  .stat-chip .val { font-family:'Orbitron',monospace; font-weight:700; font-size:1.6rem; line-height:1; }
-  .stat-chip .lbl { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--muted); margin-top:6px; text-transform:uppercase; }
+  /* ── Aparición ── */
+  .fade { opacity:0; transform:translateY(22px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+  .fade.visible { opacity:1; transform:none; }
 
-  /* ── Science cards ── */
-  .sci-card {
-    padding: 28px;
-    background: rgba(255,215,0,0.04);
-    border: 1px solid var(--border);
-    border-left: 3px solid #ffd700;
-    border-radius: 4px;
+  /* ── Separador: filo dorado con rombo rojo ── */
+  .divider { position:relative; height:1px; margin:0 auto; background: linear-gradient(90deg, transparent, var(--line-hi), transparent); }
+  .divider::after {
+    content:''; position:absolute; left:50%; top:50%; width:8px; height:8px;
+    transform: translate(-50%,-50%) rotate(45deg); background: var(--metal-red);
+    box-shadow: 0 0 12px rgba(200,16,46,.6);
   }
 
-  /* ── Plan cards ── */
-  .plan-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 32px 24px;
-    display: flex;
-    flex-direction: column;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-  .plan-card:hover {
-    border-color: rgba(255,215,0,0.30);
-    box-shadow: 0 0 24px rgba(255,215,0,0.08);
-  }
-  .plan-card.featured {
-    border-color: var(--amber);
-    box-shadow: 0 0 30px rgba(232,160,32,0.12);
-    background: rgba(232,160,32,0.04);
-  }
-
-  /* ── CTA Buttons ── */
-  .btn-primary {
-    display:inline-block; text-align:center;
-    background: transparent;
-    border: 1px solid #ffd700;
-    color: #ffd700;
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 14px 32px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.2s;
-    cursor: pointer;
-  }
-  .btn-primary:hover {
-    background: #ffd700;
-    color: #000;
-    box-shadow: 0 0 20px rgba(255,215,0,0.30);
-  }
-  .btn-amber {
-    display:inline-block; text-align:center;
-    background: var(--amber);
-    border: 1px solid var(--amber);
-    color: #000;
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 14px 32px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.2s;
-    cursor: pointer;
-    width: 100%;
-  }
-  .btn-amber:hover {
-    background: #fff;
-    border-color: #fff;
-    box-shadow: 0 0 20px rgba(232,160,32,0.30);
-  }
-  .btn-outline {
-    display:inline-block; text-align:center;
-    background: transparent;
-    border: 1px solid rgba(255,215,0,0.22);
-    color: var(--muted);
-    font-family: 'Orbitron', monospace;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 12px 24px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.2s;
-    cursor: pointer;
-    width: 100%;
-  }
-  .btn-outline:hover {
-    border-color: #ffd700;
-    color: #ffd700;
-  }
-
-  /* ── Form inputs ── */
-  .field {
-    width: 100%;
-    background: rgba(4,8,14,0.85);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 13px 16px;
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .field:focus { border-color: rgba(255,215,0,0.55); }
-  .field::placeholder { color: var(--muted); }
-
-  /* ── Badge ── */
-  .badge {
-    display:inline-block;
-    font-family:'JetBrains Mono',monospace;
-    font-size:8px; letter-spacing:2px; text-transform:uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-    border: 1px solid;
-  }
-
-  /* ── Alert bar ── */
+  /* ── Barra de alerta (rojo metálico) ── */
   .alert-bar {
-    background: rgba(224,48,64,0.08);
-    border-bottom: 1px solid rgba(224,48,64,0.18);
-    padding: 8px;
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: rgba(224,48,64,0.85);
-    text-transform: uppercase;
+    background: linear-gradient(90deg, rgba(74,0,14,.92), rgba(139,10,31,.92) 50%, rgba(74,0,14,.92));
+    border-bottom: 1px solid rgba(255,77,104,.28);
+    padding: 9px 16px; text-align:center;
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color: #ffe3e8;
   }
 
-  /* ── Nav ── */
+  /* ── Navegación ── */
   nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(3,5,10,0.90);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: sticky; top:0; z-index:100;
+    background: rgba(4,4,5,.78);
+    backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 32px;
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
   }
+  nav::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:1px; background: linear-gradient(90deg, transparent, rgba(200,16,46,.6), transparent); }
+  .nav-brand { font-family:'Orbitron', sans-serif; font-weight:900; font-size:15px; letter-spacing:.32em; }
+  .nav-status { display:flex; align-items:center; gap:8px; }
+  .nav-status span:last-child { font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.2em; color: var(--muted); }
 
-  /* ── Checkbox ── */
-  input[type="checkbox"] { accent-color: #ffd700; width:15px; height:15px; }
-
-  /* ── Pulse dot ── */
   .pulse-dot {
-    width: 7px; height: 7px; border-radius:50%;
-    background: #ffd700;
-    display:inline-block;
-    box-shadow: 0 0 8px rgba(255,215,0,0.6);
+    width:8px; height:8px; border-radius:50%; display:inline-block;
+    background: radial-gradient(circle at 35% 35%, #ffb3bf, var(--red) 60%, var(--red-lo));
+    box-shadow: 0 0 10px rgba(255,77,104,.75);
     animation: pulse 2s ease-in-out infinite;
   }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  @keyframes pulse { 0%,100%{opacity:1; transform:scale(1)} 50%{opacity:.45; transform:scale(.85)} }
 
-  /* ── Exclusive bar ── */
-  .exclusive-bar {
-    background: rgba(232,160,32,0.06);
-    border: 1px solid rgba(232,160,32,0.20);
-    border-radius: 6px;
-    padding: 20px 28px;
-    display:flex; align-items:center; gap:16px;
+  /* ── Botones ── */
+  .btn-primary, .btn-amber, .btn-outline {
+    display:inline-flex; align-items:center; justify-content:center; gap:8px; text-align:center;
+    font-family:'Sora', sans-serif; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    text-decoration:none; cursor:pointer; border-radius: 12px;
+    transition: transform .2s ease, box-shadow .25s ease, background-position .6s ease, color .2s, border-color .2s;
   }
+  .btn-primary {
+    color:#1a1204; border:1px solid #f3dc9b55;
+    background: var(--metal-gold); background-size: 220% 100%;
+    box-shadow: 0 10px 30px rgba(212,175,90,.22), inset 0 1px 0 rgba(255,255,255,.55);
+    font-size:12px; padding:14px 32px;
+  }
+  .btn-primary:hover { background-position: 100% 0; transform: translateY(-1px); box-shadow: 0 14px 36px rgba(212,175,90,.34), inset 0 1px 0 rgba(255,255,255,.6); }
+  .btn-primary:disabled { opacity:.6; cursor:default; transform:none; }
+  .btn-primary.nav-cta { padding:9px 18px; font-size:10px; }
+  .btn-primary.hero-cta { font-size:13px; padding:17px 46px; }
 
-  /* Responsive */
-  @media(max-width:768px){
-    .stat-chip .val { font-size:1.2rem; }
+  .btn-amber {
+    width:100%; font-size:12px; padding:15px 22px; color:#fff;
+    border:1px solid rgba(255,179,191,.35);
+    background: var(--metal-red); background-size: 220% 100%;
+    box-shadow: 0 12px 30px rgba(200,16,46,.30), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .btn-amber:hover { background-position: 100% 0; transform: translateY(-1px); box-shadow: 0 16px 38px rgba(200,16,46,.42), inset 0 1px 0 rgba(255,255,255,.4); }
+
+  .btn-outline {
+    width:100%; font-size:11px; padding:13px 22px; color: var(--gold-hi);
+    background: rgba(212,175,90,.04); border:1px solid var(--line-hi);
+  }
+  .btn-outline:hover { border-color: var(--gold); color:#fff; background: rgba(212,175,90,.12); box-shadow: 0 0 0 4px rgba(212,175,90,.08); }
+  .btn-outline.inline { display:inline-flex; width:auto; padding:11px 28px; }
+
+  /* ── Insignia ── */
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
+    padding: 7px 16px; border-radius: 999px;
+    color: var(--gold-hi); border:1px solid var(--line-hi);
+    background: linear-gradient(180deg, rgba(212,175,90,.10), rgba(212,175,90,.02));
+  }
+  .badge::before { content:''; flex:0 0 auto; width:6px; height:6px; transform:rotate(45deg); background: var(--metal-red); }
+
+  /* ── HERO ── */
+  .hero { position:relative; }
+  .hero-frame {
+    position:absolute; inset: 64px 0 24px; pointer-events:none; z-index:-1;
+    border-radius: 28px;
+    background:
+      linear-gradient(var(--line-hi), var(--line-hi)) top left / 64px 1px no-repeat,
+      linear-gradient(var(--line-hi), var(--line-hi)) top left / 1px 64px no-repeat,
+      linear-gradient(var(--line-hi), var(--line-hi)) top right / 64px 1px no-repeat,
+      linear-gradient(var(--line-hi), var(--line-hi)) top right / 1px 64px no-repeat,
+      linear-gradient(rgba(200,16,46,.55), rgba(200,16,46,.55)) bottom left / 64px 1px no-repeat,
+      linear-gradient(rgba(200,16,46,.55), rgba(200,16,46,.55)) bottom left / 1px 64px no-repeat,
+      linear-gradient(rgba(200,16,46,.55), rgba(200,16,46,.55)) bottom right / 64px 1px no-repeat,
+      linear-gradient(rgba(200,16,46,.55), rgba(200,16,46,.55)) bottom right / 1px 64px no-repeat;
+  }
+  .hero-title {
+    font-family:'Orbitron', sans-serif; font-weight:900;
+    font-size: clamp(3rem, 10vw, 7.2rem); letter-spacing: .02em; line-height: 1; margin-bottom: 18px;
+    filter: drop-shadow(0 6px 30px rgba(212,175,90,.18));
+  }
+  .hero-sub {
+    font-family:'Sora', sans-serif; font-weight:600;
+    font-size: clamp(1.1rem, 2.8vw, 1.85rem); letter-spacing:.01em; line-height:1.35;
+    color: var(--pearl); margin-bottom: 24px;
+  }
+  .hero-sub span { display:inline-block; margin-top:6px; color: var(--muted); font-weight:400; font-size:.78em; }
+  .hero-copy { max-width: 660px; margin: 0 auto 38px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+  .hero-note { margin-top:14px; font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.14em; color: var(--muted); }
+
+  /* ── Cifras ── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:760px; margin:0 auto; }
+  .stat-chip {
+    position:relative; display:flex; flex-direction:column; align-items:center; gap:8px;
+    padding: 22px 16px 20px; border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01)), var(--panel);
+    border: 1px solid var(--line);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 18px 40px rgba(0,0,0,.35);
+  }
+  .stat-chip::before { content:''; position:absolute; top:-1px; left:22%; right:22%; height:2px; border-radius:2px; background: var(--metal-gold); }
+  .stat-chip.red::before { background: var(--metal-red); }
+  .stat-chip .val { font-family:'Orbitron', sans-serif; font-weight:800; font-size:1.5rem; line-height:1; white-space:nowrap; }
+  .stat-chip .lbl { font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.2em; color: var(--muted); text-transform:uppercase; text-align:center; }
+
+  /* ── Secciones ── */
+  .section-head { margin-bottom: 56px; }
+  .section-head h2 { font-family:'Sora', sans-serif; font-weight:700; font-size: clamp(1.6rem, 3.2vw, 2.4rem); color: var(--pearl); margin-top: 14px; }
+  .section-head p { color: var(--muted); margin: 12px auto 0; font-size: 15px; max-width: 560px; line-height:1.7; }
+
+  /* ── Tarjetas de arquitectura ── */
+  .sci-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+  .sci-card {
+    position:relative; overflow:hidden; padding: 30px 28px 28px; border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 40%), var(--panel);
+    border: 1px solid var(--line);
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .sci-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--metal-red); }
+  .sci-card::after {
+    content:''; position:absolute; right:-60px; top:-60px; width:160px; height:160px; border-radius:50%;
+    background: radial-gradient(circle, rgba(212,175,90,.12), transparent 70%);
+  }
+  .sci-card:hover { transform: translateY(-3px); border-color: var(--line-hi); box-shadow: 0 24px 50px rgba(0,0,0,.45); }
+  .sci-num { font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:.22em; color: var(--gold); margin-bottom: 16px; }
+  .sci-card h3 { font-family:'Sora', sans-serif; font-weight:600; font-size:18px; color: var(--pearl); margin-bottom: 12px; }
+  .sci-card p { font-size:14px; color: var(--muted); line-height:1.8; }
+
+  /* ── Barra exclusiva ── */
+  .exclusive-bar {
+    display:flex; align-items:center; gap:24px; padding: 24px 30px; border-radius: var(--radius);
+    background: linear-gradient(90deg, rgba(139,10,31,.20), rgba(11,11,13,.9) 45%);
+    border: 1px solid rgba(255,77,104,.22);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .exclusive-bar .tag { font-family:'Orbitron', sans-serif; font-weight:800; font-size:12px; letter-spacing:.2em; white-space:nowrap; }
+  .exclusive-bar p { font-size:14px; color: var(--muted); line-height:1.75; }
+
+  /* ── Planes ── */
+  .plans { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; align-items: stretch; }
+  .plan-card {
+    position:relative; display:flex; flex-direction:column; padding: 34px 26px 26px; border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,0) 35%), var(--panel);
+    border: 1px solid var(--line);
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .plan-card:hover { transform: translateY(-4px); border-color: var(--line-hi); box-shadow: 0 26px 56px rgba(0,0,0,.5); }
+  .plan-kicker { font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.22em; color: var(--faint); margin-bottom:16px; }
+  .plan-name { font-family:'Sora', sans-serif; font-weight:600; font-size:16px; color: var(--pearl); margin-bottom:10px; }
+  .plan-price { font-family:'Orbitron', sans-serif; font-weight:900; font-size:2.6rem; line-height:1; margin-bottom:6px; }
+  .plan-term { font-family:'JetBrains Mono', monospace; font-size:11px; color: var(--muted); margin-bottom:24px; }
+  .plan-card ul { list-style:none; font-size:13.5px; color: var(--muted); line-height:2.1; margin-bottom:28px; flex:1; }
+  .plan-card ul li::first-letter { color: var(--gold); }
+
+  /* Destacado: blanco perla con filo de oro (Lancelot) */
+  .plan-card.featured {
+    background: var(--metal-pearl);
+    border: 1px solid #e9c97a;
+    box-shadow: 0 30px 70px rgba(212,175,90,.18), 0 0 0 1px rgba(255,255,255,.4) inset;
+    transform: translateY(-8px);
+  }
+  .plan-card.featured:hover { transform: translateY(-12px); }
+  .plan-card.featured::before {
+    content:''; position:absolute; inset:0; border-radius:18px; pointer-events:none;
+    background: linear-gradient(180deg, rgba(212,175,90,.18), transparent 30%);
+  }
+  .plan-card.featured .plan-kicker { color: #8b0a1f; }
+  .plan-card.featured .plan-name { color: #14110b; }
+  .plan-card.featured .plan-price.red-text { background: var(--metal-red); background-size:220% 100%; -webkit-background-clip:text; background-clip:text; }
+  .plan-card.featured .plan-term,
+  .plan-card.featured ul { color: #5a5446; }
+  .plan-card.featured ul li::first-letter { color: var(--red); }
+  .plan-ribbon {
+    position:absolute; top:-13px; left:50%; transform:translateX(-50%); white-space:nowrap;
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+    padding: 6px 14px; border-radius: 999px; color:#fff;
+    background: var(--metal-red); border:1px solid rgba(255,179,191,.45);
+    box-shadow: 0 8px 22px rgba(200,16,46,.35);
+  }
+  .plan-card .btn-outline, .plan-card .btn-amber { font-size:11px; letter-spacing:.06em; padding:13px 12px; line-height:1.35; text-wrap:balance; min-height:48px; }
+  .plans-note { margin-top: 28px; text-align:center; font-family:'JetBrains Mono', monospace; font-size:11px; color: var(--muted); letter-spacing:.06em; }
+
+  /* ── Registro ── */
+  .card {
+    position:relative; border-radius: 20px; padding: 38px;
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0) 30%), var(--panel);
+    border: 1px solid var(--line-hi);
+    box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 60px rgba(200,16,46,.07);
+  }
+  .card::before { content:''; position:absolute; top:-1px; left:30px; right:30px; height:2px; border-radius:2px; background: var(--metal-gold); }
+  .field-label { display:block; margin-bottom:8px; font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.2em; color: var(--muted); }
+  .field {
+    width:100%; padding: 14px 16px; border-radius: 12px; outline:none;
+    background: rgba(0,0,0,.45); border: 1px solid var(--line);
+    color: var(--text); font-family:'JetBrains Mono', monospace; font-size:13px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .field:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212,175,90,.14); }
+  .field::placeholder { color: var(--faint); }
+  .legal {
+    margin-bottom: 24px; padding: 16px; border-radius: 12px; display:flex; gap:12px; align-items:flex-start;
+    background: rgba(139,10,31,.10); border: 1px solid rgba(255,77,104,.22);
+  }
+  .legal label { font-family:'JetBrains Mono', monospace; font-size:11px; color: var(--muted); line-height:1.65; cursor:pointer; }
+  .legal strong { color: var(--pearl); }
+  input[type="checkbox"] { accent-color: var(--red); width:16px; height:16px; flex:0 0 auto; margin-top:2px; }
+  #reg-btn { width:100%; padding:16px; font-size:12px; }
+  #reg-msg { display:none; margin-top:16px; text-align:center; font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.06em; }
+  .card-foot { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); text-align:center; }
+  .card-foot p { font-family:'JetBrains Mono', monospace; font-size:11px; color: var(--muted); margin-bottom: 10px; }
+
+  /* ── Pie ── */
+  footer { border-top: 1px solid var(--line); padding: 44px 24px; text-align:center; background: linear-gradient(180deg, transparent, rgba(139,10,31,.06)); }
+  footer .f-brand { font-family:'Orbitron', sans-serif; font-weight:900; font-size:13px; letter-spacing:.34em; margin-bottom:10px; }
+  footer p { font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.16em; color: var(--muted); }
+  footer p + p { margin-top:8px; letter-spacing:.04em; color: var(--faint); }
+
+
+  /* ── Así se juega ── */
+  .steps { display:grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: paso; }
+  .step {
+    position:relative; padding: 26px 22px; border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 40%), var(--panel);
+    border: 1px solid var(--line);
+  }
+  .step + .step::before {
+    content:''; position:absolute; left:-12px; top:42px; width:8px; height:8px; transform: rotate(45deg);
+    background: var(--metal-red); box-shadow: 0 0 10px rgba(200,16,46,.5);
+  }
+  .step-n { display:inline-block; font-family:'Orbitron', sans-serif; font-weight:800; font-size:22px; margin-bottom:14px;
+    background: var(--metal-gold); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .step h3 { font-family:'Sora', sans-serif; font-weight:600; font-size:16px; color: var(--pearl); margin-bottom:8px; }
+  .step p { font-size:13.5px; color: var(--muted); line-height:1.7; }
+
+  /* ── Preguntas frecuentes ── */
+  .faq { display:flex; flex-direction:column; gap:12px; }
+  .faq details {
+    border-radius: var(--radius); border:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0) 40%), var(--panel);
+    transition: border-color .2s;
+  }
+  .faq details[open] { border-color: var(--line-hi); }
+  .faq summary {
+    list-style:none; cursor:pointer; padding: 18px 22px; display:flex; justify-content:space-between; align-items:center; gap:16px;
+    font-family:'Sora', sans-serif; font-weight:600; font-size:15.5px; color: var(--pearl);
+  }
+  .faq summary::-webkit-details-marker { display:none; }
+  .faq summary::after { content:'+'; font-family:'JetBrains Mono', monospace; font-size:18px; color: var(--gold); flex:0 0 auto; transition: transform .2s; }
+  .faq details[open] summary::after { transform: rotate(45deg); color: var(--red-hi); }
+  .faq details p { padding: 0 22px 20px; font-size:14px; color: var(--muted); line-height:1.75; }
+
+
+  /* ════════ BANDAS DE COLOR: Shinkirō (negro, oro, rojo) × Lancelot (blanco perla, oro) ════════ */
+  .band { position:relative; overflow:hidden; }
+  .seam { height:6px; background:
+      linear-gradient(90deg, #6b0016, #c8102e 18%, #f6e3a4 50%, #c8102e 82%, #6b0016);
+    box-shadow: 0 0 24px rgba(200,16,46,.45); position:relative; z-index:2; }
+
+  /* Shinkirō: negro azabache con placas de armadura en rojo metálico y filos de oro */
+  .band-shinkiro {
+    background:
+      linear-gradient(115deg, transparent 0 58%, rgba(200,16,46,.30) 58% 59%, rgba(139,10,31,.55) 59% 72%, rgba(212,175,90,.55) 72% 72.4%, transparent 72.4%),
+      linear-gradient(245deg, transparent 0 66%, rgba(139,10,31,.45) 66% 76%, rgba(212,175,90,.5) 76% 76.35%, transparent 76.35%),
+      radial-gradient(900px 520px at 50% 0%, rgba(200,16,46,.35), transparent 70%),
+      radial-gradient(700px 420px at 50% 100%, rgba(212,175,90,.14), transparent 70%),
+      #050304;
+  }
+  .band-shinkiro::before, .band-shinkiro::after {
+    content:''; position:absolute; left:0; right:0; height:2px; z-index:1;
+    background: linear-gradient(90deg, transparent, #d4af5a 20%, #f6e3a4 50%, #d4af5a 80%, transparent);
+  }
+  .band-shinkiro::before { top:0; } .band-shinkiro::after { bottom:0; }
+  .band-planes { background:
+      radial-gradient(800px 500px at 50% 30%, rgba(200,16,46,.28), transparent 70%),
+      linear-gradient(180deg, #070304, #120306 50%, #070304); }
+
+  /* Rojo metálico pleno */
+  .band-crimson {
+    background:
+      linear-gradient(100deg, rgba(255,255,255,0) 30%, rgba(255,200,210,.18) 45%, rgba(255,255,255,0) 60%),
+      linear-gradient(180deg, #5c0012, #8b0a1f 40%, #6b0016);
+    border-top: 2px solid #d4af5a; border-bottom: 2px solid #d4af5a;
+  }
+  .band-crimson .exclusive-bar { background: rgba(10,0,3,.55); border: 1px solid rgba(243,220,155,.45); }
+  .band-crimson .exclusive-bar .tag { background: var(--metal-gold); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .band-crimson .exclusive-bar p { color: #ffe3e8; }
+
+  /* Lancelot: blanco perla con filos de oro y acentos rojos */
+  .band-pearl {
+    background:
+      linear-gradient(180deg, rgba(212,175,90,.10), transparent 30%),
+      radial-gradient(900px 500px at 85% 10%, rgba(212,175,90,.18), transparent 70%),
+      linear-gradient(160deg, #ffffff 0%, #f6f2e8 45%, #ece5d3 100%);
+    color:#14110b;
+    border-top: 3px solid #d4af5a; border-bottom: 3px solid #d4af5a;
+  }
+  .band-pearl .section-head h2 { color:#14110b; }
+  .band-pearl .section-head p { color:#5a5446; }
+  .band-pearl .eyebrow { color:#8b0a1f; }
+  .band-pearl .eyebrow::before, .band-pearl .eyebrow::after { background: linear-gradient(90deg, #b8892b, #c8102e); }
+  .band-pearl .sci-card {
+    background: linear-gradient(180deg, #ffffff, #f8f5ee);
+    border: 1px solid #e3d3a6; box-shadow: 0 18px 40px rgba(120,90,30,.14), inset 0 1px 0 #fff;
+  }
+  .band-pearl .sci-card::before { background: linear-gradient(180deg, #c8102e, #8b0a1f); width:4px; }
+  .band-pearl .sci-card::after { background: radial-gradient(circle, rgba(212,175,90,.28), transparent 70%); }
+  .band-pearl .sci-card:hover { border-color:#d4af5a; box-shadow: 0 26px 54px rgba(120,90,30,.22); }
+  .band-pearl .sci-num { color:#8b0a1f; }
+  .band-pearl .sci-card h3 { color:#14110b; }
+  .band-pearl .sci-card p { color:#4f4a3f; }
+  .band-pearl .faq details { background: linear-gradient(180deg, #ffffff, #f8f5ee); border:1px solid #e3d3a6; box-shadow: 0 10px 26px rgba(120,90,30,.10); }
+  .band-pearl .faq details[open] { border-color:#d4af5a; }
+  .band-pearl .faq summary { color:#14110b; }
+  .band-pearl .faq summary::after { color:#b8892b; }
+  .band-pearl .faq details[open] summary::after { color:#c8102e; }
+  .band-pearl .faq details p { color:#4f4a3f; }
+
+  .band-registro { background:
+      radial-gradient(700px 480px at 50% 40%, rgba(200,16,46,.22), transparent 70%), #050304; }
+
+  /* Cifras del hero con placa de oro */
+  .band-shinkiro .stat-chip { background: linear-gradient(180deg, rgba(139,10,31,.35), rgba(10,4,5,.9)); border:1px solid rgba(212,175,90,.5); }
+  .band-shinkiro .stat-chip::before { left:0; right:0; top:0; height:3px; border-radius:14px 14px 0 0; }
+  /* Pasos con número en placa roja */
+  .step-n { background: var(--metal-red); -webkit-background-clip:border-box; background-clip:border-box; color:#fff; -webkit-text-fill-color:#fff;
+    padding:6px 12px; border-radius:10px; font-size:16px; box-shadow: 0 8px 20px rgba(200,16,46,.35); border:1px solid rgba(243,220,155,.5); }
+  .step { border-color: rgba(212,175,90,.32); }
+  .step::after { content:''; position:absolute; left:22px; right:22px; top:0; height:2px; background: var(--metal-gold); }
+  /* Planes: borde de oro visible */
+  .band-planes .plan-card { border-color: rgba(212,175,90,.38); }
+  .band-planes .plan-card::after { content:''; position:absolute; left:0; right:0; top:0; height:3px; border-radius:18px 18px 0 0; background: var(--metal-gold); }
+  .band-planes .plan-card.featured::after { background: var(--metal-red); }
+  .card { border-color: rgba(212,175,90,.55); }
+
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 12px 16px; }
+    .nav-status { display:none; }
+    .pt-28 { padding-top: 72px; }
+    .py-24 { padding-top: 72px; padding-bottom: 72px; }
+    .px-6 { padding-left:16px; padding-right:16px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .step + .step::before { display:none; }
+    .stat-chip .val { font-size: 1.3rem; }
+    .exclusive-bar { flex-direction: column; align-items: flex-start; gap: 12px; padding: 22px; }
+    .plan-card.featured { transform: none; }
+    .plan-card.featured:hover { transform: translateY(-4px); }
+    .card { padding: 26px 20px; }
+    .hero-frame { display:none; }
+    .alert-bar { font-size: 10px; letter-spacing: .1em; }
+  }
+  @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) {
+    .brand-shine, .pulse-dot { animation: none; }
+    .fade { transition: none; opacity:1; transform:none; }
+    html { scroll-behavior: auto; }
   }
 </style>
 </head>
@@ -269,293 +487,363 @@
 
 <!-- ── ALERT BAR ── -->
 <div class="alert-bar">
-  ◈ Acceso limitado activo &nbsp;·&nbsp; <span id="fomo-count">14</span> licencias disponibles &nbsp;·&nbsp; El cupo cierra cuando se completa la capacidad operativa
+  ◈ Ruleta europea en vivo &nbsp;·&nbsp; física y en línea &nbsp;·&nbsp; Prueba de 250 giros sin tarjeta
 </div>
 
 <!-- ── NAV ── -->
 <nav>
-  <div class="font-head text-sm font-bold tracking-widest" style="color:#ffd700;">D.A.N.N.A.</div>
-  <div style="display:flex;align-items:center;gap:8px;">
+  <div class="nav-brand gold-text">D.A.N.N.A.</div>
+  <div class="nav-status">
     <span class="pulse-dot"></span>
-    <span class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);">SISTEMA OPERATIVO</span>
+    <span>SISTEMA OPERATIVO</span>
   </div>
-  <a href="#registro" class="btn-primary" style="padding:8px 20px;font-size:9px;">ACCEDER AL TERMINAL →</a>
+  <a href="#registro" class="btn-primary nav-cta">ACCEDER AL TERMINAL →</a>
 </nav>
 
+<main>
 
 <!-- ══════════════════════════════════════════════
      HERO
 ══════════════════════════════════════════════ -->
-<section class="text-center px-6 pt-28 pb-20 max-w-5xl mx-auto">
+<div class="band band-shinkiro">
+<section class="hero text-center px-6 pt-28 pb-20 max-w-5xl mx-auto">
+  <div class="hero-frame" aria-hidden="true"></div>
 
-  <div class="fade" style="margin-bottom:16px;">
-    <span class="badge" style="border-color:rgba(255,215,0,0.30);color:var(--muted);">
-      Motor Predictivo · Versión 1.0 · Validado sobre 8,151 Spins
+  <div class="fade" style="margin-bottom:22px;">
+    <span class="badge">
+      Ingeniería para ruleta europea en vivo · +50.000 giros reales
     </span>
   </div>
 
-  <h1 class="fade font-head font-black grad-cyan" style="font-size:clamp(3rem,10vw,7rem);letter-spacing:-1px;line-height:1;margin-bottom:12px;">
+  <h1 class="fade hero-title gold-text brand-shine">
     D.A.N.N.A.
   </h1>
 
-  <h2 class="fade font-head font-bold" style="font-size:clamp(1.1rem,3vw,2rem);color:rgba(200,220,232,0.85);letter-spacing:2px;margin-bottom:24px;">
-    Nada permanece oculto bajo el análisis..<br>
-    <span style="color:var(--muted);font-weight:400;">Lo que parece caos tiene estructura. Nosotros la procesamos.</span>
+  <h2 class="fade hero-sub">
+    Nada permanece oculto bajo el análisis.<br>
+    <span>Lo que parece caos tiene estructura. Nosotros la procesamos.</span>
   </h2>
 
-  <p class="fade" style="max-width:640px;margin:0 auto 36px;color:var(--muted);font-size:15px;line-height:1.8;">
-    D.A.N.N.A. es un motor de análisis probabilístico de alta precisión. Procesa flujos de frecuencia y ciclos de comportamiento en tiempo real para extraer vectores de ejecución basados en lógica computacional — no en el azar.
+  <p class="fade hero-copy">
+    D.A.N.N.A. es ingeniería aplicada a la ruleta europea en vivo: 5 motores de análisis que miden probabilidades y estadística de la mesa giro a giro, construidos y probados en mesas reales con apuestas reales. Te muestra las zonas calientes y te propone cuándo entrar, cuándo esperar y cuándo parar. Tú decides.
   </p>
 
-  <div class="fade" style="margin-bottom:56px;">
-    <a href="#registro" class="btn-primary" style="font-size:12px;padding:16px 48px;">
+  <div class="fade" style="margin-bottom:60px;">
+    <a href="#registro" class="btn-primary hero-cta">
       ◈ ACCEDER AL TERMINAL
     </a>
-    <p style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--muted);">
+    <p class="hero-note">
       Registro en 60 segundos · Sin tarjeta requerida para Trial
     </p>
   </div>
 
   <!-- Stats row -->
-  <div class="fade" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:700px;margin:0 auto;">
+  <div class="fade stats">
     <div class="stat-chip">
-      <span class="val" style="color:#ffd700;">68.1%</span>
-      <span class="lbl">Hit Rate Docenas</span>
+      <span class="val gold-text">+50.000</span>
+      <span class="lbl">Giros reales</span>
     </div>
     <div class="stat-chip">
-      <span class="val" style="color:#ffd700;">8,151</span>
-      <span class="lbl">Spins Validados</span>
+      <span class="val gold-text">5</span>
+      <span class="lbl">Motores de análisis</span>
+    </div>
+    <div class="stat-chip red">
+      <span class="val red-text">+1 año</span>
+      <span class="lbl">En mesa real</span>
     </div>
     <div class="stat-chip">
-      <span class="val" style="color:var(--amber);">+838u</span>
-      <span class="lbl">PnL Backtest</span>
-    </div>
-    <div class="stat-chip">
-      <span class="val" style="color:#ffd700;">5</span>
-      <span class="lbl">Modelos ML</span>
+      <span class="val gold-text">Giro a giro</span>
+      <span class="lbl">Lectura en vivo</span>
     </div>
   </div>
 
 </section>
+</div>
 
-<div class="divider" style="max-width:900px;"></div>
+<div class="seam" aria-hidden="true"></div>
 
 
 <!-- ══════════════════════════════════════════════
      THE SCIENCE
 ══════════════════════════════════════════════ -->
+<div class="band band-pearl">
 <section class="px-6 py-24 max-w-5xl mx-auto">
 
-  <div class="fade text-center" style="margin-bottom:56px;">
-    <div class="font-mono" style="font-size:9px;letter-spacing:3px;color:#ffd700;margin-bottom:10px;">◈ ARQUITECTURA</div>
-    <h2 class="font-head font-bold" style="font-size:clamp(1.5rem,3vw,2.2rem);color:var(--text);">
-      The Science Behind the Edge
+  <div class="fade text-center section-head">
+    <div class="eyebrow">◈ ARQUITECTURA</div>
+    <h2>
+      La ingeniería de D.A.N.N.A.
     </h2>
-    <p style="color:var(--muted);margin-top:10px;font-size:14px;max-width:520px;margin-inline:auto;">
-      Tres pilares técnicos que convierten el ruido estadístico en vectores de ejecución accionables.
+    <p>
+      Tres pilares que convierten la mesa en una lectura clara, giro a giro.
     </p>
   </div>
 
-  <div class="fade" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+  <div class="fade sci-grid">
 
     <div class="sci-card">
-      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:#ffd700;margin-bottom:14px;">01 · ENSEMBLE NEURAL</div>
-      <h3 class="font-head" style="font-size:16px;color:var(--text);margin-bottom:10px;">Red de Modelos Adaptativos</h3>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;">
-        Cinco modelos operan en paralelo — FreqDecay, Markov, NaiveBayes, LSTM y WheelExpert físico. Un meta-learner pondera sus votos con pesos adaptativos en tiempo real según su rendimiento reciente.
+      <div class="sci-num">01 · MOTORES</div>
+      <h3>Cinco motores, una lectura</h3>
+      <p>
+        Cinco modelos distintos miran la mesa desde ángulos diferentes y un meta-modelo combina lo que ve cada uno. El resultado es una sola lectura: dónde están las zonas calientes de docenas y columnas.
       </p>
     </div>
 
     <div class="sci-card">
-      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:#ffd700;margin-bottom:14px;">02 · ANÁLISIS DE CICLOS</div>
-      <h3 class="font-head" style="font-size:16px;color:var(--text);margin-bottom:10px;">Detección de Patrones Físicos</h3>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;">
-        WheelExpert Premium analiza la firma del crupier, el scatter de la bola y la dominancia de sector en la rueda europea. Cuando hay patrón físico detectable, el sistema lo extrae y lo traduce en probabilidades accionables.
+      <div class="sci-num">02 · MESA REAL</div>
+      <h3>Ruleta física, apuestas reales</h3>
+      <p>
+        D.A.N.N.A. se construyó y se probó durante más de un año en mesas reales, con crupier y dinero real, sobre más de 50.000 giros. Trabaja con la rueda y los números que caen de verdad, física o en línea.
       </p>
     </div>
 
     <div class="sci-card">
-      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:#ffd700;margin-bottom:14px;">03 · GESTIÓN DE VARIANZA</div>
-      <h3 class="font-head" style="font-size:16px;color:var(--text);margin-bottom:10px;">Protocolo de Capital Óptimo</h3>
-      <p style="font-size:13px;color:var(--muted);line-height:1.8;">
-        El indicador OPTIMAL / CAUTION / ABORT evalúa en tiempo real el score de la mesa, la entropía del sistema y los errores consecutivos. Cuando las condiciones son adversas, el motor lo indica antes de que el capital esté en riesgo.
+      <div class="sci-num">03 · DISCIPLINA</div>
+      <h3>El copiloto de ciclo</h3>
+      <p>
+        Te propone entradas cortas, te marca la transición después de un error, cierra el ciclo y te manda a pausa. Tú eliges en cada momento con qué entras, si esperas o si pasas.
       </p>
     </div>
 
   </div>
 
 </section>
+</div>
 
-<div class="divider" style="max-width:900px;"></div>
+<div class="seam" aria-hidden="true"></div>
 
 
 <!-- ══════════════════════════════════════════════
      EXCLUSIVITY
 ══════════════════════════════════════════════ -->
+<div class="band band-crimson">
 <section class="px-6 py-16 max-w-4xl mx-auto fade">
   <div class="exclusive-bar">
     <div style="flex:0 0 auto;">
-      <div class="font-head" style="font-size:11px;letter-spacing:2px;color:var(--amber);">◈ ACCESO RESTRINGIDO</div>
+      <div class="tag red-text">◈ D.A.N.N.A. PROPONE, TÚ DECIDES</div>
     </div>
     <div style="flex:1;">
-      <p style="font-size:13px;color:var(--muted);line-height:1.7;">
-        El cupo de operadores activos es deliberadamente limitado. Un número elevado de usuarios simultáneos sobre los mismos patrones de mesa reduce la ventaja algorítmica colectiva. D.A.N.N.A. no es un producto masivo — es una herramienta para quienes toman el riesgo en serio.
+      <p>
+        D.A.N.N.A. no juega por ti. Te da una lectura clara de la mesa y un método para entrar corto, esperar cuando no conviene y parar a tiempo. Es una herramienta para quienes toman su juego en serio.
       </p>
     </div>
   </div>
 </section>
+</div>
 
-<div class="divider" style="max-width:900px;"></div>
+<div class="seam" aria-hidden="true"></div>
+
+
+<!-- ══════════════════════════════════════════════
+     ASÍ SE JUEGA
+══════════════════════════════════════════════ -->
+<section class="px-6 py-24 max-w-5xl mx-auto">
+
+  <div class="fade text-center section-head">
+    <div class="eyebrow">◈ MÉTODO</div>
+    <h2>Así se juega con D.A.N.N.A.</h2>
+    <p>
+      Cuatro pasos, en cualquier mesa de ruleta europea en vivo.
+    </p>
+  </div>
+
+  <div class="fade steps">
+    <div class="step"><span class="step-n">01</span><h3>Mete los últimos 7 giros</h3><p>Escribe los números que acaban de salir en tu mesa, física o en línea.</p></div>
+    <div class="step"><span class="step-n">02</span><h3>D.A.N.N.A. lee la mesa</h3><p>Aprobado, con una propuesta clara, o sin señal: no entres.</p></div>
+    <div class="step"><span class="step-n">03</span><h3>Entras corto</h3><p>El copiloto te acompaña giro a giro y te avisa cuándo no apostar.</p></div>
+    <div class="step"><span class="step-n">04</span><h3>Cierras y pausas</h3><p>El ciclo se cierra, descansas y vuelves a leer la mesa.</p></div>
+  </div>
+
+</section>
+
+<div class="seam" aria-hidden="true"></div>
 
 
 <!-- ══════════════════════════════════════════════
      PLANES
 ══════════════════════════════════════════════ -->
+<div class="band band-shinkiro band-planes">
 <section id="planes" class="px-6 py-24 max-w-5xl mx-auto">
 
-  <div class="fade text-center" style="margin-bottom:56px;">
-    <div class="font-mono" style="font-size:9px;letter-spacing:3px;color:#ffd700;margin-bottom:10px;">◈ LICENCIAS</div>
-    <h2 class="font-head font-bold" style="font-size:clamp(1.5rem,3vw,2.2rem);">Adquiere Tu Licencia de Acceso</h2>
-    <p style="color:var(--muted);margin-top:10px;font-size:14px;">
+  <div class="fade text-center section-head">
+    <div class="eyebrow">◈ LICENCIAS</div>
+    <h2>Adquiere Tu Licencia de Acceso</h2>
+    <p>
       Sin contratos. Sin permanencia. Activa solo cuando vayas a operar.
     </p>
   </div>
 
-  <div class="fade" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:start;">
+  <div class="fade plans">
 
     <!-- Trial -->
     <div class="plan-card">
-      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:16px;">ENTRADA</div>
-      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Trial Access</div>
-      <div class="font-head font-black" style="font-size:2.5rem;color:var(--cyan);line-height:1;margin-bottom:4px;">$0</div>
-      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">250 spins · Un solo uso</div>
-      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+      <div class="plan-kicker">ENTRADA</div>
+      <div class="plan-name">Trial Access</div>
+      <div class="plan-price gold-text">$0</div>
+      <div class="plan-term">250 spins · Un solo uso</div>
+      <ul>
         <li>· Motor completo</li>
         <li>· Sin tarjeta requerida</li>
-        <li>· WheelExpert activo</li>
+        <li>· Copiloto de ciclo incluido</li>
       </ul>
       <a href="#registro" class="btn-outline">INICIAR TRIAL →</a>
     </div>
 
     <!-- Daily -->
     <div class="plan-card">
-      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:16px;">SESIÓN</div>
-      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Daily Pass</div>
-      <div class="font-head font-black" style="font-size:2.5rem;color:var(--cyan);line-height:1;margin-bottom:4px;">$10</div>
-      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">Acceso 24 horas · Ilimitado</div>
-      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+      <div class="plan-kicker">SESIÓN</div>
+      <div class="plan-name">Daily Pass</div>
+      <div class="plan-price gold-text">$10</div>
+      <div class="plan-term">Acceso 24 horas · Ilimitado</div>
+      <ul>
         <li>· Spins ilimitados</li>
         <li>· Motor completo</li>
         <li>· Activación inmediata</li>
       </ul>
       <a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/ccab099f-9c7d-47a2-9874-a7cba4d93766"
-         target="_blank" class="btn-outline">ADQUIRIR LICENCIA — $10 →</a>
+         target="_blank" rel="noopener noreferrer" class="btn-outline">ADQUIRIR LICENCIA — $10 →</a>
     </div>
 
     <!-- Weekly — FEATURED -->
-    <div class="plan-card featured" style="position:relative;">
-      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);">
-        <span class="badge" style="border-color:var(--amber);color:var(--amber);background:rgba(232,160,32,0.12);">
+    <div class="plan-card featured">
+      <div class="plan-ribbon">
           MÁS SELECCIONADO
-        </span>
       </div>
-      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--amber);margin-bottom:16px;">OPERACIONAL</div>
-      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Weekly Pro</div>
-      <div class="font-head font-black grad-amber" style="font-size:2.5rem;line-height:1;margin-bottom:4px;">$25</div>
-      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">7 días · Acceso total</div>
-      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+      <div class="plan-kicker">OPERACIONAL</div>
+      <div class="plan-name">Weekly Pro</div>
+      <div class="plan-price red-text">$25</div>
+      <div class="plan-term">7 días · Acceso total</div>
+      <ul>
         <li>· Spins ilimitados</li>
         <li>· Soporte prioritario</li>
         <li>· Actualizaciones de algoritmo</li>
         <li>· Todas las categorías activas</li>
       </ul>
       <a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/3cdb40dd-defd-468d-a2fe-b47b1fe6b18b"
-         target="_blank" class="btn-amber">ADQUIRIR LICENCIA — $25 →</a>
+         target="_blank" rel="noopener noreferrer" class="btn-amber">ADQUIRIR LICENCIA — $25 →</a>
     </div>
 
     <!-- Monthly -->
     <div class="plan-card">
-      <div class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:16px;">ÉLITE</div>
-      <div class="font-head font-bold" style="font-size:15px;color:var(--text);margin-bottom:8px;">Monthly Elite</div>
-      <div class="font-head font-black" style="font-size:2.5rem;color:var(--cyan);line-height:1;margin-bottom:4px;">$75</div>
-      <div class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:24px;">30 días · Máxima cobertura</div>
-      <ul style="list-style:none;font-size:12px;color:var(--muted);line-height:2;margin-bottom:28px;flex:1;">
+      <div class="plan-kicker">ÉLITE</div>
+      <div class="plan-name">Monthly Elite</div>
+      <div class="plan-price gold-text">$75</div>
+      <div class="plan-term">30 días · Máxima cobertura</div>
+      <ul>
         <li>· Spins ilimitados</li>
         <li>· Soporte dedicado</li>
         <li>· Todas las actualizaciones</li>
         <li>· Acceso prioritario a nuevas versiones</li>
       </ul>
       <a href="https://mlgunnerenginedanna.lemonsqueezy.com/checkout/buy/41a8c44e-e7b9-4782-a3a1-33a51c7da1c5"
-         target="_blank" class="btn-outline">ADQUIRIR LICENCIA — $75 →</a>
+         target="_blank" rel="noopener noreferrer" class="btn-outline">ADQUIRIR LICENCIA — $75 →</a>
     </div>
 
   </div>
 
   <!-- Nota email -->
-  <div class="fade" style="margin-top:24px;text-align:center;">
-    <p class="font-mono" style="font-size:10px;color:var(--muted);letter-spacing:1px;">
+  <div class="fade">
+    <p class="plans-note">
       ◈ Usa el mismo email en LemonSqueezy y en tu registro D.A.N.N.A. — la activación es automática.
     </p>
   </div>
 
 </section>
+</div>
 
-<div class="divider" style="max-width:900px;"></div>
+<div class="seam" aria-hidden="true"></div>
+
+
+<!-- ══════════════════════════════════════════════
+     PREGUNTAS FRECUENTES
+══════════════════════════════════════════════ -->
+<div class="band band-pearl">
+<section class="px-6 py-24 max-w-4xl mx-auto">
+
+  <div class="fade text-center section-head">
+    <div class="eyebrow">◈ PREGUNTAS</div>
+    <h2>Preguntas frecuentes</h2>
+  </div>
+
+  <div class="fade faq">
+    <details>
+      <summary>¿D.A.N.N.A. predice el número?</summary>
+      <p>No te dice qué número va a salir. Mide la mesa giro a giro, te muestra sus zonas calientes en docenas y columnas, y te propone cuándo entrar y cuándo esperar. La decisión es tuya.</p>
+    </details>
+    <details>
+      <summary>¿Sirve en mi casino?</summary>
+      <p>Sirve en cualquier ruleta europea en vivo con crupier, física o en línea. Tú ingresas los números que salen y D.A.N.N.A. lee esa mesa. Con la prueba de 250 giros lo compruebas en tu propia mesa.</p>
+    </details>
+    <details>
+      <summary>¿Es legal?</summary>
+      <p>D.A.N.N.A. es un software de análisis: no recibe apuestas ni maneja tu dinero. Tú juegas donde ya juegas y D.A.N.N.A. solo lee los números que ingresas. Es solo para mayores de edad.</p>
+    </details>
+    <details>
+      <summary>¿Cómo se activa mi plan?</summary>
+      <p>Regístrate con el mismo email que usarás en LemonSqueezy. Al confirmar el pago, tu plan se activa automáticamente.</p>
+    </details>
+  </div>
+
+</section>
+</div>
+
+<div class="seam" aria-hidden="true"></div>
 
 
 <!-- ══════════════════════════════════════════════
      REGISTRO
 ══════════════════════════════════════════════ -->
+<div class="band band-registro">
 <section id="registro" class="px-6 py-24 max-w-lg mx-auto">
 
-  <div class="fade text-center" style="margin-bottom:40px;">
-    <div class="font-mono" style="font-size:9px;letter-spacing:3px;color:#ffd700;margin-bottom:10px;">◈ ACCESO</div>
-    <h2 class="font-head font-bold" style="font-size:clamp(1.4rem,3vw,2rem);">Crear Cuenta de Operador</h2>
-    <p style="color:var(--muted);margin-top:10px;font-size:13px;line-height:1.7;">
+  <div class="fade text-center section-head" style="margin-bottom:40px;">
+    <div class="eyebrow">◈ ACCESO</div>
+    <h2>Crear Cuenta de Operador</h2>
+    <p>
       Registra tu cuenta. Luego adquiere tu licencia arriba.<br>
       La activación es automática al confirmar el pago.
     </p>
   </div>
 
-  <div class="fade card card-glow" style="padding:36px;">
+  <div class="fade card">
 
     <form id="register-form" autocomplete="off">
 
-      <div style="margin-bottom:14px;">
-        <label class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px;">NOMBRE DE USUARIO</label>
-        <input type="text" id="reg-username" class="field" placeholder="minimo 3 caracteres" required>
+      <div style="margin-bottom:16px;">
+        <label class="field-label" for="reg-username">NOMBRE DE USUARIO</label>
+        <input type="text" id="reg-username" class="field" placeholder="minimo 3 caracteres" required autocomplete="username" maxlength="64">
       </div>
 
-      <div style="margin-bottom:14px;">
-        <label class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px;">CORREO ELECTRÓNICO</label>
-        <input type="email" id="reg-email" class="field" placeholder="el mismo que usarás en LemonSqueezy" required>
+      <div style="margin-bottom:16px;">
+        <label class="field-label" for="reg-email">CORREO ELECTRÓNICO</label>
+        <input type="email" id="reg-email" class="field" placeholder="el mismo que usarás en LemonSqueezy" required autocomplete="email" maxlength="254">
       </div>
 
-      <div style="margin-bottom:14px;">
-        <label class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);display:block;margin-bottom:6px;">CONTRASEÑA</label>
-        <input type="password" id="reg-password" class="field" placeholder="mínimo 6 caracteres" required>
+      <div style="margin-bottom:16px;">
+        <label class="field-label" for="reg-password">CONTRASEÑA</label>
+        <input type="password" id="reg-password" class="field" placeholder="mínimo 6 caracteres" required autocomplete="new-password" maxlength="128">
       </div>
 
-      <div style="margin-bottom:24px;padding:16px;background:rgba(224,48,64,0.05);border:1px solid rgba(224,48,64,0.18);border-radius:4px;display:flex;gap:12px;align-items:flex-start;">
-        <input type="checkbox" id="reg-legal" required style="margin-top:2px;">
-        <label for="reg-legal" class="font-mono" style="font-size:10px;color:var(--muted);line-height:1.6;cursor:pointer;">
+      <div class="legal">
+        <input type="checkbox" id="reg-legal" required>
+        <label for="reg-legal">
           Soy mayor de edad (18+). Entiendo que D.A.N.N.A. es una herramienta de
-          <strong style="color:var(--text);">análisis probabilístico</strong>, no una garantía de resultados financieros.
+          <strong>análisis probabilístico</strong>, no una garantía de resultados financieros.
           Asumo el 100% del riesgo operativo.
         </label>
       </div>
 
-      <button type="submit" id="reg-btn" class="btn-primary" style="width:100%;padding:15px;font-size:11px;">
+      <button type="submit" id="reg-btn" class="btn-primary">
         ◈ CREAR CUENTA DE OPERADOR →
       </button>
 
-      <div id="reg-msg" style="display:none;margin-top:16px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;"></div>
+      <div id="reg-msg" role="status" aria-live="polite"></div>
 
     </form>
 
-    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);text-align:center;">
-      <p class="font-mono" style="font-size:10px;color:var(--muted);margin-bottom:8px;">¿Ya tienes cuenta?</p>
-      <a href="https://app.dannaengine.com" target="_blank" class="btn-outline" style="display:inline-block;width:auto;padding:10px 28px;">
+    <div class="card-foot">
+      <p>¿Ya tienes cuenta?</p>
+      <a href="https://app.dannaengine.com" target="_blank" rel="noopener noreferrer" class="btn-outline inline">
         ACCEDER AL TERMINAL →
       </a>
     </div>
@@ -563,17 +851,19 @@
   </div>
 
 </section>
+</div>
 
+</main>
 
 <!-- ══════════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════════ -->
-<footer style="border-top:1px solid var(--border);padding:40px 24px;text-align:center;">
-  <div class="font-head" style="font-size:11px;letter-spacing:3px;color:#ffd700;margin-bottom:8px;">D.A.N.N.A.</div>
-  <p class="font-mono" style="font-size:9px;letter-spacing:2px;color:var(--muted);">
+<footer>
+  <div class="f-brand gold-text">D.A.N.N.A.</div>
+  <p>
     MOTOR DE ANÁLISIS PROBABILÍSTICO · BOGOTÁ, COLOMBIA · 2026
   </p>
-  <p class="font-mono" style="font-size:9px;color:var(--muted);margin-top:6px;opacity:0.6;">
+  <p>
     El uso de este sistema es estrictamente analítico. No garantiza resultados financieros.
   </p>
 </footer>
@@ -587,15 +877,6 @@
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
   document.querySelectorAll('.fade').forEach(el => obs.observe(el));
-
-  // ── FOMO counter ──
-  const fomoEl = document.getElementById('fomo-count');
-  if(fomoEl) {
-    setInterval(() => {
-      let v = parseInt(fomoEl.textContent);
-      if(v > 4 && Math.random() > 0.75) fomoEl.textContent = (v-1).toString();
-    }, 18000);
-  }
 
   // ── Register form ──
   document.getElementById('register-form').addEventListener('submit', async (e) => {
@@ -611,19 +892,19 @@
 
     if(!leg) {
       msg.style.display = 'block';
-      msg.style.color = '#e03040';
+      msg.style.color = '#ff4d68';
       msg.textContent = '◈ Debes aceptar los términos para continuar.';
       return;
     }
     if(u.length < 3) {
       msg.style.display = 'block';
-      msg.style.color = '#e03040';
+      msg.style.color = '#ff4d68';
       msg.textContent = '◈ Usuario mínimo 3 caracteres.';
       return;
     }
     if(p.length < 6) {
       msg.style.display = 'block';
-      msg.style.color = '#e03040';
+      msg.style.color = '#ff4d68';
       msg.textContent = '◈ Contraseña mínimo 6 caracteres.';
       return;
     }
@@ -641,21 +922,21 @@
       msg.style.display = 'block';
 
       if(data.success) {
-        msg.style.color = '#ffd700';
+        msg.style.color = '#f3dc9b';
         msg.innerHTML = (
           '◈ Cuenta creada exitosamente.<br>' +
-          '<span style="color:rgba(155,195,212,0.6);font-size:10px;">' +
+          '<span style="color:rgba(243,239,230,0.6);font-size:11px;">' +
           'Adquiere tu licencia arriba usando este mismo email para activación automática.' +
           '</span>'
         );
         document.getElementById('register-form').reset();
       } else {
-        msg.style.color = '#e03040';
+        msg.style.color = '#ff4d68';
         msg.textContent = '◈ ' + (data.message || 'Error al crear cuenta.');
       }
     } catch(err) {
       msg.style.display = 'block';
-      msg.style.color = '#e03040';
+      msg.style.color = '#ff4d68';
       msg.textContent = '◈ Error de conexión. Verifica tu red e intenta de nuevo.';
     }
 
